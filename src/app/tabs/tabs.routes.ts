@@ -19,6 +19,20 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'taken-exams/:id',
+        loadComponent: () =>
+          import(
+            '../taken-exams/taken-exam-details/taken-exam-details.page'
+          ).then((m) => m.TakenExamDetailsPage),
+      },
+      {
+        path: 'taken-exams/:id/continue',
+        loadComponent: () =>
+          import(
+            '../taken-exams/taken-exam-details/taken-exam-details.page'
+          ).then((m) => m.TakenExamDetailsPage),
+      },
+      {
         path: 'profile',
         loadComponent: () =>
           import('../profile/profile.page').then((m) => m.ProfilePage),
