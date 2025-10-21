@@ -14,6 +14,7 @@ import {
   IonItem,
   IonInput,
   IonCheckbox,
+  IonSpinner,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -26,6 +27,7 @@ import {
 import { Storage } from '@ionic/storage-angular';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -41,6 +43,7 @@ import { Router } from '@angular/router';
     IonItem,
     IonInput,
     IonCheckbox,
+    IonSpinner,
   ],
 })
 export class LoginPage {
@@ -72,20 +75,31 @@ export class LoginPage {
   }
 
   login() {
-    this.isSigningIn.set(true);
-    const { email, password, remember } = this.form.getRawValue();
+    if (this.form.invalid) return;
 
-    this.authService.login(email, password).subscribe({
-      next: (res) => {
-        this.isSigningIn.set(false);
-        this.router.navigate(['/tabs']);
-        this.errorMessage.set(null);
-      },
-      error: (err) => {
-        console.error('Login failed', err);
-        this.isSigningIn.set(false);
-        this.errorMessage.set('Login failed. Please check your credentials.');
-      },
-    });
+    this.isSigningIn.set(true);
+    this.errorMessage.set(null);
+    const { email, password } = this.form.getRawValue();
+
+    this.authService
+      .login(email, password)
+      .pipe(
+        finalize(() => {
+          this.isSigningIn.set(false);
+        })
+      )
+      .subscribe({
+        next: (res) => {
+          console.log('Login successful:', res);
+          this.router.navigate(['/tabs']);
+        },
+        error: (err) => {
+          console.error('Login failed:', err);
+          this.errorMessage.set(
+            err?.error?.message ||
+              'Login failed. Please check your credentials.'
+          );
+        },
+      });
   }
 }
