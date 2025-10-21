@@ -1,13 +1,86 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>login</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content>
+  <div class="flex justify-center items-center min-h-screen bg-linear-to-br from-blue-50 to-indigo-100">
+    <div class="w-10/12 max-w-md bg-white rounded-2xl shadow-xl p-8">
+      <h2 class="text-3xl font-bold text-center text-indigo-600 mb-8">
+        Welcome Back
+      </h2>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">login</ion-title>
-    </ion-toolbar>
-  </ion-header>
+      <form [formGroup]="form" (ngSubmit)="login()" class="space-y-4">
+        <!-- Email -->
+        <div>
+          <label class="block text-gray-700 mb-1 font-semibold">Email</label>
+          <ion-item lines="none" class="rounded-lg border border-gray-200 bg-gray-50">
+            <ion-icon name="mail-outline" slot="start" class="text-indigo-500 mr-2"></ion-icon>
+            <ion-input
+              type="email"
+              formControlName="email"
+              placeholder="Enter your email"
+              class="text-base"
+            ></ion-input>
+          </ion-item>
+            @if (form.controls.email.invalid && (form.controls.email.dirty || form.controls.email.touched)) {
+              <div class="text-red-600 text-sm mt-1">
+                @if (form.controls.email.errors?.['required']) {
+                  <span>Email is required.</span>
+                } @else if (form.controls.email.errors?.['email']) {
+                  <span>Please enter a valid email address.</span>
+                }
+              </div>
+            }
+        </div>
+
+        <!-- Password -->
+        <div>
+          <label class="block text-gray-700 mb-1 font-semibold">Password</label>
+          <ion-item lines="none" class="rounded-lg border border-gray-200 bg-gray-50">
+            <ion-icon name="lock-closed-outline" slot="start" class="text-indigo-500 mr-2"></ion-icon>
+            <ion-input
+              [type]="passwordVisible ? 'text' : 'password'"
+              formControlName="password"
+              placeholder="Enter your password"
+              class="text-base"
+            ></ion-input>
+            <ion-icon
+              [name]="passwordVisible ? 'eye-off-outline' : 'eye-outline'"
+              slot="end"
+              class="cursor-pointer text-indigo-500 hover:text-indigo-700"
+              (click)="togglePassword()"
+            ></ion-icon>
+          </ion-item>
+            @if (form.controls.password.invalid && (form.controls.password.dirty || form.controls.password.touched)) {
+              <div class="text-red-600 text-sm mt-1">
+                @if (form.controls.password.errors?.['required']) {
+                  <span>Password is required.</span>
+                } @else if (form.controls.password.errors?.['minlength']) {
+                  <span>Password must be at least 6 characters long.</span>
+                }
+              </div>
+            }
+
+        </div>
+
+        <!-- Remember Me -->
+        <div class="flex items-center justify-between mt-2">
+          <div class="flex items-center space-x-2">
+            <ion-checkbox formControlName="remember" color="indigo"></ion-checkbox>
+            <label class="text-gray-700 text-sm font-medium">Remember me</label>
+          </div>
+          <a href="#" class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">Forgot Password?</a>
+        </div>
+
+        <!-- Submit Button -->
+        <ion-button
+          expand="block"
+          type="submit"
+          [disabled]="form.invalid"
+          class="mt-6 text-white font-semibold rounded-lg py-3 shadow-md"
+        >
+          <ion-icon name="log-in-outline" slot="start" class="mr-2"></ion-icon>
+          Login
+        </ion-button>
+      </form>
+
+    </div>
+  </div>
+
 </ion-content>
