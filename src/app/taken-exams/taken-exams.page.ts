@@ -28,6 +28,8 @@ import {
   checkmarkCircleOutline,
   eyeOutline,
   arrowForwardOutline,
+  checkmarkDoneOutline,
+  helpCircleOutline,
 } from 'ionicons/icons';
 import { map, finalize } from 'rxjs';
 
@@ -75,6 +77,8 @@ export class TakenExamsPage {
       checkmarkCircleOutline,
       eyeOutline,
       arrowForwardOutline,
+      checkmarkDoneOutline,
+      helpCircleOutline,
     });
   }
 
@@ -139,6 +143,18 @@ export class TakenExamsPage {
       default:
         return 'Graded';
     }
+  }
+
+  getAnsweredCount(exam: ITakenExam): number {
+    return exam.answers_count ?? 0;
+  }
+
+  getTotalItemsCount(exam: ITakenExam): number {
+    return exam.exam?.items_count ?? 0;
+  }
+
+  getUnansweredCount(exam: ITakenExam): number {
+    return this.getTotalItemsCount(exam) - this.getAnsweredCount(exam);
   }
 }
 export interface ITakenExamExtended extends ITakenExam {
