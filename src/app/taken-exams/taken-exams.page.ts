@@ -91,15 +91,7 @@ export class TakenExamsPage {
             ...exam,
             statusLabel: this.getStatusLabel(exam.status),
             statusColor: this.getStatusColor(exam.status),
-            percentage:
-              exam.exam?.total_points && exam.total_points
-                ? parseFloat(
-                    (
-                      (exam.total_points / exam.exam.total_points) *
-                      100
-                    ).toFixed(2)
-                  )
-                : 0,
+            percentage: this.getPercentage(exam),
           }))
         ),
         finalize(() => {
@@ -118,14 +110,16 @@ export class TakenExamsPage {
       });
   }
 
-  getPercentage(taken: ITakenExam): number {
+  private getPercentage(taken: ITakenExam): number {
     if (taken.exam?.total_points && taken.total_points) {
-      return (taken.total_points / taken.exam.total_points) * 100;
+      return parseFloat(
+        ((taken.total_points / taken.exam.total_points) * 100).toFixed(2)
+      );
     }
     return 0;
   }
 
-  getStatusColor(status: string): string {
+  private getStatusColor(status: string): string {
     switch (status) {
       case 'ongoing':
         return 'warning';
@@ -136,7 +130,7 @@ export class TakenExamsPage {
     }
   }
 
-  getStatusLabel(status: string): string {
+  private getStatusLabel(status: string): string {
     switch (status) {
       case 'ongoing':
         return 'In Progress';
