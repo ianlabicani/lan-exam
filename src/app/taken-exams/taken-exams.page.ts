@@ -64,7 +64,7 @@ export class TakenExamsPage {
   error = signal<string | null>(null);
 
   ionViewWillEnter() {
-    this.loadExams();
+    this.loadTakenExams();
   }
 
   constructor() {
@@ -78,7 +78,7 @@ export class TakenExamsPage {
     });
   }
 
-  loadExams() {
+  loadTakenExams() {
     this.loading.set(true);
     this.error.set(null);
     this.http
@@ -101,7 +101,7 @@ export class TakenExamsPage {
       .subscribe({
         next: (examsWithMetadata) => {
           console.log('Exams data:', examsWithMetadata);
-          this.takenExams.set(examsWithMetadata as ITakenExamExtended[]);
+          this.takenExams.set(examsWithMetadata);
         },
         error: (error) => {
           console.error('Error fetching exams data:', error);
@@ -141,6 +141,11 @@ export class TakenExamsPage {
     }
   }
 }
+export interface ITakenExamExtended extends ITakenExam {
+  statusLabel: string;
+  statusColor: string;
+  percentage: number;
+}
 
 export interface ITakenExam {
   id: number;
@@ -152,23 +157,41 @@ export interface ITakenExam {
   total_points: number;
   created_at: Date;
   updated_at: Date;
-  is_ongoing: boolean;
-  is_completed: boolean;
-  percentage: number;
+  answers_count: number;
   exam: Exam;
-}
-
-export interface ITakenExamExtended extends ITakenExam {
-  statusLabel: string;
-  statusColor: string;
-  percentage: number;
 }
 
 export interface Exam {
   id: number;
   title: string;
-  total_points: number;
-  status: string;
+  description: string;
   starts_at: Date;
   ends_at: Date;
+  year: string[];
+  sections: string[];
+  status: string;
+  total_points: number;
+  tos: To[];
+  created_at: Date;
+  updated_at: Date;
+  items_count: number;
+}
+
+export interface To {
+  topic: string;
+  outcomes: any[];
+  time_allotment: number;
+  no_of_items: number;
+  distribution: Distribution;
+}
+
+export interface Distribution {
+  easy: Difficult;
+  moderate: Difficult;
+  difficult: Difficult;
+}
+
+export interface Difficult {
+  allocation: number;
+  placement: any[];
 }
