@@ -137,8 +137,9 @@
               @if (takenExam.submitted_at) {
                 <ion-button
                   fill="solid"
-                  color="success"
+                  color="dark"
                   [routerLink]="['/tabs/taken-exams', takenExam.id]"
+                  id="view-submission"
                   class="flex-1 rounded-xl">
                   <ion-icon name="eye-outline" slot="start" class="mr-2"></ion-icon>
                   View Submission
