@@ -14,6 +14,7 @@ export class AuthService {
   currentUser = signal<null | undefined | IAuthUser>(undefined);
 
   async initLocalCurrentUser() {
+    await this.storage.create();
     const localCurrentUser = await this.storage.get('lan-exam-user');
 
     if (!localCurrentUser) {
@@ -42,7 +43,7 @@ export class AuthService {
     await this.setLanExamUser(null);
   }
 
-  async setLanExamUser(authUser: IAuthUser | null) {
+  private async setLanExamUser(authUser: IAuthUser | null) {
     this.currentUser.set(authUser);
     await this.storage.set('lan-exam-user', JSON.stringify(authUser));
   }

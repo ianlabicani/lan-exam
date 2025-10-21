@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
@@ -24,6 +24,8 @@ import {
   logInOutline,
 } from 'ionicons/icons';
 import { Storage } from '@ionic/storage-angular';
+import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -41,16 +43,19 @@ import { Storage } from '@ionic/storage-angular';
     IonCheckbox,
   ],
 })
-export class LoginPage implements OnInit {
+export class LoginPage {
   private fb = inject(FormBuilder);
-  private storage = inject(Storage);
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
-  form = this.fb.group({
+  form = this.fb.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
     remember: [false],
   });
-  passwordVisible = false;
+  passwordVisible = signal(false);
+  isSigningIn = signal(false);
+  errorMessage = signal<string | null>(null);
 
   constructor() {
     addIcons({
@@ -62,37 +67,25 @@ export class LoginPage implements OnInit {
     });
   }
 
-  async ngOnInit() {
-    // await this.storage.create();
-    // const savedEmail = await this.storage.get('email');
-    // const savedPassword = await this.storage.get('password');
-    // if (savedEmail && savedPassword) {
-    //   this.form.patchValue({
-    //     email: savedEmail,
-    //     password: savedPassword,
-    //     remember: true,
-    //   });
-    // }
-  }
-
   togglePassword() {
-    this.passwordVisible = !this.passwordVisible;
+    this.passwordVisible.update((prev) => !prev);
   }
 
-  async login() {
-    const { email, password, remember } = this.form.value;
+  login() {
+    this.isSigningIn.set(true);
+    const { email, password, remember } = this.form.getRawValue();
 
-    // Simulate login
-    console.log('Logging in with', email);
-
-    // if (remember) {
-    //   await this.storage.set('email', email);
-    //   await this.storage.set('password', password);
-    // } else {
-    //   await this.storage.remove('email');
-    //   await this.storage.remove('password');
-    // }
-
-    alert('Login successful!');
+    this.authService.login(email, password).subscribe({
+      next: (res) => {
+        this.isSigningIn.set(false);
+        this.router.navigate(['/tabs']);
+        this.errorMessage.set(null);
+      },
+      error: (err) => {
+        console.error('Login failed', err);
+        this.isSigningIn.set(false);
+        this.errorMessage.set('Login failed. Please check your credentials.');
+      },
+    });
   }
 }

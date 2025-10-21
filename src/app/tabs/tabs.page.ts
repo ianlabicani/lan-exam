@@ -1,4 +1,5 @@
 import { Component, EnvironmentInjector, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import {
   IonTabs,
   IonTabBar,
@@ -13,7 +14,7 @@ import { personOutline, timeOutline, newspaperOutline } from 'ionicons/icons';
   selector: 'app-tabs',
   templateUrl: 'tabs.page.html',
   styleUrls: ['tabs.page.scss'],
-  imports: [IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel],
+  imports: [IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel, RouterLink],
 })
 export class TabsPage {
   public environmentInjector = inject(EnvironmentInjector);
