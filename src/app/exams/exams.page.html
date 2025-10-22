@@ -1,18 +1,201 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>exams</ion-title>
+    <ion-title>Exams</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" class="ion-padding">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">exams</ion-title>
+      <ion-title size="large">Available Exams</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <div>
-    <h1>Hello, Exams here</h1>
+  <!-- Loading State -->
+  @if (loading()) {
+  <div
+    style="
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    "
+  >
+    <ion-spinner name="crescent"></ion-spinner>
   </div>
+  }
 
+  <!-- Error State -->
+  @if (error() && !loading()) {
+  <div
+    style="
+      background-color: var(--ion-color-danger-tint);
+      border: 1px solid var(--ion-color-danger);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+    "
+  >
+    <p style="color: var(--ion-color-danger); margin: 0">
+      <strong>Error:</strong> {{ error() }}
+    </p>
+  </div>
+  }
+
+  <!-- Empty State -->
+  @if (exams().length === 0 && !loading()) {
+  <div
+    style="
+      text-align: center;
+      padding: 48px 16px;
+    "
+  >
+    <ion-icon
+      name="help-circle-outline"
+      style="
+        font-size: 64px;
+        color: var(--ion-color-medium);
+        margin-bottom: 16px;
+      "
+    ></ion-icon>
+    <h2 style="color: var(--ion-color-medium)">No Exams Available</h2>
+    <p style="color: var(--ion-color-medium)">
+      There are no exams available at the moment.
+    </p>
+  </div>
+  }
+
+  <!-- Exams List -->
+  @if (exams().length > 0 && !loading()) {
+  <div style="display: flex; flex-direction: column; gap: 16px">
+    @for (exam of exams(); track exam.id) {
+    <ion-card>
+      <ion-card-header>
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+          "
+        >
+          <div style="flex: 1">
+            <ion-card-title style="margin-bottom: 8px">
+              {{ exam.title }}
+            </ion-card-title>
+            <p
+              style="
+                font-size: 0.875rem;
+                color: var(--ion-color-medium);
+                margin: 0;
+              "
+            >
+              {{ exam.description }}
+            </p>
+          </div>
+          <ion-badge
+            [color]="getStatusColor(exam.status)"
+            style="text-transform: capitalize; white-space: nowrap"
+          >
+            {{ exam.status }}
+          </ion-badge>
+        </div>
+      </ion-card-header>
+
+      <ion-card-content>
+        <!-- Exam Details Grid -->
+        <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px">
+          <!-- Time Information -->
+          <div style="display: flex; align-items: center; gap: 8px">
+            <ion-icon
+              name="time-outline"
+              style="
+                font-size: 20px;
+                color: var(--ion-color-primary);
+              "
+            ></ion-icon>
+            <span style="font-size: 0.875rem">
+              {{ formatDate(exam.starts_at) }} - {{ formatDate(exam.ends_at) }}
+            </span>
+          </div>
+
+          <!-- Points -->
+          <div style="display: flex; align-items: center; gap: 8px">
+            <ion-icon
+              name="help-circle-outline"
+              style="
+                font-size: 20px;
+                color: var(--ion-color-success);
+              "
+            ></ion-icon>
+            <span style="font-size: 0.875rem">
+              {{ exam.items_count }} Questions • {{ exam.total_points }} Points
+            </span>
+          </div>
+
+          <!-- Year & Sections -->
+          <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap">
+            <span style="font-size: 0.875rem; color: var(--ion-color-medium)">
+              Year: {{ exam.year.join(', ') }} | Sections: {{ exam.sections.join(', ').toUpperCase() }}
+            </span>
+          </div>
+
+          <!-- Topics -->
+          @if (exam.tos.length > 0) {
+          <div style="margin-top: 8px">
+            <p
+              style="
+                font-size: 0.75rem;
+                color: var(--ion-color-medium);
+                margin: 0 0 6px 0;
+                text-transform: uppercase;
+              "
+            >
+              Topics Covered
+            </p>
+            <div style="display: flex; gap: 6px; flex-wrap: wrap">
+              @for (topic of exam.tos; track topic.topic) {
+              <ion-badge color="primary">{{ topic.topic }}</ion-badge>
+              }
+            </div>
+          </div>
+          }
+        </div>
+
+        <!-- Action Button -->
+        <div style="display: flex; gap: 8px; margin-top: 16px">
+          @if (exam.status === 'ongoing') {
+          <ion-button
+            expand="block"
+            fill="solid"
+            color="primary"
+            (click)="startExam(exam)"
+          >
+            <ion-icon name="play-outline" slot="start"></ion-icon>
+            Start Exam
+          </ion-button>
+          } @else if (exam.taken_exam) {
+          <ion-button expand="block" fill="outline" color="primary" disabled>
+            <ion-icon
+              [name]="
+                exam.taken_exam.status === 'completed'
+                  ? 'checkmark-circle-outline'
+                  : 'close-circle-outline'
+              "
+              slot="start"
+            ></ion-icon>
+            {{ exam.taken_exam.status | titlecase }}
+          </ion-button>
+          } @else {
+          <ion-button expand="block" fill="outline" color="medium" disabled>
+            <ion-icon name="close-circle-outline" slot="start"></ion-icon>
+            Not Available
+          </ion-button>
+          }
+        </div>
+      </ion-card-content>
+    </ion-card>
+    }
+  </div>
+  }
 </ion-content>

@@ -56,12 +56,12 @@ export interface IAuthUser {
 }
 
 export interface IUser {
-  id: number;
-  name: string;
-  email: string;
-  year: '1' | '2' | '3' | '4' | null;
-  section: 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | null;
-  email_verified_at: null;
-  created_at: Date;
-  updated_at: Date;
+  readonly id: number;
+  readonly name: string;
+  readonly email: string;
+  readonly year: '1' | '2' | '3' | '4' | null;
+  readonly section: 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | null;
+  readonly email_verified_at: string | null;
+  readonly created_at: string;
+  readonly updated_at: string;
 }

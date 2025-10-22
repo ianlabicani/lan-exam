@@ -1,13 +1,177 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>profile</ion-title>
+    <ion-title>Profile</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" class="ion-padding">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">profile</ion-title>
+      <ion-title size="large">Profile</ion-title>
     </ion-toolbar>
   </ion-header>
+
+  @if (currentUser) {
+  <div style="padding: 24px 0">
+    <!-- User Avatar / Icon -->
+    <div
+      style="
+        text-align: center;
+        margin-bottom: 32px;
+      "
+    >
+      <div
+        style="
+          width: 80px;
+          height: 80px;
+          background: linear-gradient(135deg, var(--ion-color-primary), var(--ion-color-primary-shade));
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin: 0 auto;
+          margin-bottom: 16px;
+        "
+      >
+        <ion-icon
+          name="person-outline"
+          style="
+            font-size: 40px;
+            color: white;
+          "
+        ></ion-icon>
+      </div>
+      <h1 style="font-size: 1.5rem; font-weight: bold; margin: 0">
+        {{ currentUser.name }}
+      </h1>
+      <p style="color: var(--ion-color-medium); margin-top: 8px">Student</p>
+    </div>
+
+    <!-- User Information Card -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Account Information</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <div style="display: flex; flex-direction: column; gap: 16px">
+          <!-- Email -->
+          <div style="display: flex; align-items: flex-start; gap: 12px">
+            <ion-icon
+              name="mail-outline"
+              style="
+                font-size: 24px;
+                color: var(--ion-color-primary);
+                margin-top: 2px;
+              "
+            ></ion-icon>
+            <div style="flex: 1">
+              <p
+                style="
+                  font-size: 0.875rem;
+                  color: var(--ion-color-medium);
+                  margin: 0;
+                "
+              >
+                Email
+              </p>
+              <p
+                style="
+                  font-weight: 500;
+                  margin: 4px 0 0 0;
+                  word-break: break-all;
+                "
+              >
+                {{ currentUser.email }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Year -->
+          @if (currentUser.year) {
+          <div style="display: flex; align-items: flex-start; gap: 12px">
+            <ion-icon
+              name="book-outline"
+              style="
+                font-size: 24px;
+                color: var(--ion-color-primary);
+                margin-top: 2px;
+              "
+            ></ion-icon>
+            <div style="flex: 1">
+              <p
+                style="
+                  font-size: 0.875rem;
+                  color: var(--ion-color-medium);
+                  margin: 0;
+                "
+              >
+                Year
+              </p>
+              <p style="font-weight: 500; margin: 4px 0 0 0">
+                Year {{ currentUser.year }}
+              </p>
+            </div>
+          </div>
+          }
+
+          <!-- Section -->
+          @if (currentUser.section) {
+          <div style="display: flex; align-items: flex-start; gap: 12px">
+            <ion-icon
+              name="people-outline"
+              style="
+                font-size: 24px;
+                color: var(--ion-color-primary);
+                margin-top: 2px;
+              "
+            ></ion-icon>
+            <div style="flex: 1">
+              <p
+                style="
+                  font-size: 0.875rem;
+                  color: var(--ion-color-medium);
+                  margin: 0;
+                "
+              >
+                Section
+              </p>
+              <p style="font-weight: 500; margin: 4px 0 0 0">
+                Section {{ currentUser.section.toUpperCase() }}
+              </p>
+            </div>
+          </div>
+          }
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Logout Button -->
+    <div style="margin-top: 32px; padding-bottom: 24px">
+      <ion-button
+        expand="block"
+        fill="solid"
+        color="danger"
+        (click)="logout()"
+        style="margin-top: 16px"
+      >
+        <ion-icon name="log-out-outline" slot="start"></ion-icon>
+        Logout
+      </ion-button>
+    </div>
+  </div>
+  } @else {
+  <div
+    style="
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+    "
+  >
+    <p style="text-align: center; color: var(--ion-color-medium)">
+      No user information available
+    </p>
+  </div>
+  }
 </ion-content>

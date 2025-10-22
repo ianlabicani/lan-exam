@@ -1,4 +1,3 @@
-import { ITakenExam } from './../taken-exams.page';
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -75,7 +74,6 @@ import { MatchingAnswerItemComponent } from './matching-answer-item/matching-ans
     IonItem,
     IonLabel,
     IonText,
-    AnswerItemComponent,
     McqAnswerItemComponent,
     TrueFalseAnswerItemComponent,
     ShortAnswerItemComponent,
