@@ -164,27 +164,27 @@
 
         <!-- Action Button -->
         <div style="display: flex; gap: 8px; margin-top: 16px">
-          @if (exam.status === 'ongoing') {
+          @if (exam.action === 'start') {
           <ion-button
             expand="block"
             fill="solid"
             color="primary"
-            (click)="startExam(exam)"
+            (click)="takeExam(exam.id)"
           >
             <ion-icon name="play-outline" slot="start"></ion-icon>
             Start Exam
           </ion-button>
-          } @else if (exam.taken_exam) {
-          <ion-button expand="block" fill="outline" color="primary" disabled>
+          } @else if (exam.action == 'continue') {
+          <ion-button expand="block" fill="outline" color="primary" (click)="continueExam(exam)">
             <ion-icon
               [name]="
-                exam.taken_exam.status === 'completed'
+                exam.taken_exam?.status === 'completed'
                   ? 'checkmark-circle-outline'
                   : 'close-circle-outline'
               "
               slot="start"
             ></ion-icon>
-            {{ exam.taken_exam.status | titlecase }}
+            Continue Exam
           </ion-button>
           } @else {
           <ion-button expand="block" fill="outline" color="medium" disabled>

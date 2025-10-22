@@ -1,0 +1,97 @@
+<ion-card *ngIf="item">
+  <ion-card-header>
+    <div style="display: flex; justify-content: space-between; align-items: start;">
+      <div>
+        <ion-text color="medium">
+          <p style="font-size: 12px; margin: 0;">
+            Question {{ index + 1 }} • {{ getTypeLabel(item.type) }}
+          </p>
+        </ion-text>
+        <ion-card-title>{{ item.question }}</ion-card-title>
+      </div>
+      <ion-note color="primary">{{ item.points }} pts</ion-note>
+    </div>
+  </ion-card-header>
+
+  <ion-card-content>
+    <!-- MCQ -->
+    <div *ngIf="item.type === 'mcq'">
+      <ion-radio-group [value]="currentAnswer" (ionChange)="onAnswerChange($event.detail.value)">
+        <ion-label>
+          <ion-text>Select one option:</ion-text>
+        </ion-label>
+        <div style="margin-top: 12px;">
+          <div *ngFor="let option of item.options; let idx = index" style="margin-bottom: 8px;">
+            <ion-item lines="none">
+              <ion-radio [value]="idx" slot="start"></ion-radio>
+              <ion-label>{{ option.text }}</ion-label>
+            </ion-item>
+          </div>
+        </div>
+      </ion-radio-group>
+    </div>
+
+    <!-- True/False -->
+    <div *ngIf="item.type === 'truefalse'" style="display: flex; gap: 12px; margin-top: 12px;">
+      <ion-button [color]="currentAnswer === true ? 'success' : 'medium'"
+                  (click)="onAnswerChange(true)"
+                  expand="block"
+                  [disabled]="isReadonly">
+        True
+      </ion-button>
+      <ion-button [color]="currentAnswer === false ? 'danger' : 'medium'"
+                  (click)="onAnswerChange(false)"
+                  expand="block"
+                  [disabled]="isReadonly">
+        False
+      </ion-button>
+    </div>
+
+    <!-- Short Answer / Fill Blank -->
+    <div *ngIf="item.type === 'shortanswer' || item.type === 'fillblank'">
+      <ion-input
+        [value]="currentAnswer"
+        (ionChange)="onAnswerChange($event.detail.value)"
+        placeholder="Enter your answer"
+        [disabled]="isReadonly"
+        clearInput
+      ></ion-input>
+    </div>
+
+    <!-- Essay -->
+    <div *ngIf="item.type === 'essay'">
+      <ion-textarea
+        [value]="currentAnswer"
+        (ionChange)="onAnswerChange($event.detail.value)"
+        placeholder="Write your essay here..."
+        rows="6"
+        [disabled]="isReadonly"
+      ></ion-textarea>
+      <ion-text color="medium" *ngIf="currentAnswer">
+        <p style="font-size: 12px; margin-top: 8px;">
+          Words: {{ countWords(currentAnswer) }}
+        </p>
+      </ion-text>
+    </div>
+
+    <!-- Matching -->
+    <div *ngIf="item.type === 'matching'">
+      <ion-text color="medium">
+        <p style="font-size: 12px;">Match left items to right items:</p>
+      </ion-text>
+      <div style="margin-top: 12px; font-size: 12px;">
+        <div *ngFor="let pair of item.pairs; let idx = index" style="margin-bottom: 12px; padding: 8px; background: var(--ion-color-light); border-radius: 4px;">
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <span style="flex: 1;">{{ pair.left }}</span>
+            <span>→</span>
+            <ion-input
+              placeholder="Match with..."
+              [disabled]="isReadonly"
+              style="flex: 1;"
+            ></ion-input>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ion-card-content>
+</ion-card>

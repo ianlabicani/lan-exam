@@ -1,0 +1,27 @@
+<ion-modal [isOpen]="isOpen" (ionModalDidDismiss)="handleCancel()">
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-title>Submit Exam?</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content class="ion-padding">
+    <ion-text>
+      <h2>Are you sure you want to submit your exam?</h2>
+      <p style="margin-top: 16px;">
+        You have answered <strong>{{ answeredCount }}</strong> out of <strong>{{ totalQuestions }}</strong> questions.
+      </p>
+      <p *ngIf="unansweredCount > 0" style="color: var(--ion-color-warning);">
+        <strong>{{ unansweredCount }}</strong> question(s) remain unanswered.
+      </p>
+    </ion-text>
+
+    <div style="margin-top: 24px; display: flex; gap: 12px;">
+      <ion-button expand="block" color="medium" (click)="handleCancel()" [disabled]="isSubmitting">
+        Cancel
+      </ion-button>
+      <ion-button expand="block" color="success" (click)="handleSubmit()" [disabled]="isSubmitting" [class.ion-button-loading]="isSubmitting">
+        {{ isSubmitting ? 'Submitting...' : 'Submit Exam' }}
+      </ion-button>
+    </div>
+  </ion-content>
+</ion-modal>

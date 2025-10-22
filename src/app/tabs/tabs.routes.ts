@@ -19,13 +19,6 @@ export const routes: Routes = [
           ),
       },
       {
-        path: 'taken-exams-create',
-        loadComponent: () =>
-          import(
-            '../taken-exams/create-taken-exam/create-taken-exam.page'
-          ).then((m) => m.CreateTakenExamPage),
-      },
-      {
         path: 'taken-exams/:id',
         loadComponent: () =>
           import(
@@ -33,11 +26,11 @@ export const routes: Routes = [
           ).then((m) => m.TakenExamDetailsPage),
       },
       {
-        path: 'taken-exams/:id/continue',
+        path: 'taken-exams/:id/create',
         loadComponent: () =>
           import(
-            '../taken-exams/taken-exam-details/taken-exam-details.page'
-          ).then((m) => m.TakenExamDetailsPage),
+            '../taken-exams/create-taken-exam/create-taken-exam.page'
+          ).then((m) => m.CreateTakenExamPage),
       },
       {
         path: 'profile',

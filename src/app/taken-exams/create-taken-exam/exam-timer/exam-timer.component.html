@@ -1,0 +1,6 @@
+<div style="padding: 8px 16px; text-align: center;">
+  <ion-badge [color]="isCritical ? 'danger' : isLowTime ? 'warning' : 'medium'">
+    <ion-icon name="time-outline" style="margin-right: 6px;"></ion-icon>
+    {{ formatTime(remainingTime) }}
+  </ion-badge>
+</div>

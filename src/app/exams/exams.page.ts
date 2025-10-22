@@ -98,6 +98,39 @@ export class ExamsPage {
       });
   }
 
+  takeExam(examId: number) {
+    this.http
+      .get<{ data: any; taken_exam_id?: number }>(
+        `${environment.apiBaseUrl}/student/taken-exams/create`,
+        { params: { exam_id: examId } }
+      )
+      .subscribe({
+        next: (res) => {
+          console.log(res);
+
+          // Handle both response formats from the API
+          let takenExamId: number | undefined;
+
+          if (res.data?.taken_exam?.id) {
+            // New exam created: data.taken_exam.id
+            takenExamId = res.data.taken_exam.id;
+          } else if (res.taken_exam_id) {
+            // Existing exam in progress: taken_exam_id
+            takenExamId = res.taken_exam_id;
+          }
+
+          if (takenExamId) {
+            this.router.navigate(['tabs/taken-exams', takenExamId, 'create']);
+          } else {
+            console.error('No taken exam ID in response:', res);
+          }
+        },
+        error: (err) => {
+          console.error('Error starting exam:', err);
+        },
+      });
+  }
+
   getStatusIcon(status: string): string {
     switch (status) {
       case 'ongoing':
@@ -124,10 +157,8 @@ export class ExamsPage {
     }
   }
 
-  startExam(exam: IExam) {
-    if (exam.status === 'ongoing') {
-      this.router.navigate(['/tabs/exams', exam.id, 'take']);
-    }
+  continueExam(exam: IExam) {
+    this.router.navigate(['/tabs/taken-exams', exam.taken_exam?.id, 'create']);
   }
 
   formatDate(dateString: string): string {
@@ -157,6 +188,7 @@ export interface IExam {
   readonly updated_at: string;
   readonly items_count: number;
   readonly taken_exam: ITakenExamRef | null;
+  readonly action: 'start' | 'continue' | 'unavailable';
 }
 
 export interface ITopicOutcome {
