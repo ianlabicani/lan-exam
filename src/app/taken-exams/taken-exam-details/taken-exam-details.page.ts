@@ -121,8 +121,6 @@ export class TakenExamDetailsPage {
   loadExamDetail() {
     const id = this.activatedRoute.snapshot.paramMap.get('id');
 
-    console.log(id);
-
     const isContinue = this.activatedRoute.snapshot.url.some(
       (segment) => segment.path === 'continue'
     );
@@ -143,8 +141,6 @@ export class TakenExamDetailsPage {
       )
       .pipe(
         map((res) => {
-          console.log(res);
-
           return res.data;
         }),
         finalize(() => {
@@ -153,7 +149,6 @@ export class TakenExamDetailsPage {
       )
       .subscribe({
         next: (data) => {
-          console.log('Exam detail:', data);
           this.takenExam.set(data || null);
         },
         error: (error) => {

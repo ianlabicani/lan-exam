@@ -34,12 +34,8 @@ export class ExamsPage {
   }
 
   loadExams() {
-    console.log('init');
-
     this.http.get(`${environment.apiBaseUrl}/student/exams`).subscribe({
-      next: (data) => {
-        console.log('Exams data:', data);
-      },
+      next: (data) => {},
       error: (error) => {
         console.error('Error fetching exams data:', error);
       },

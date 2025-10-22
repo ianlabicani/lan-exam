@@ -112,7 +112,6 @@ export class TakenExamsPage {
       )
       .subscribe({
         next: (examsWithMetadata) => {
-          console.log('Exams data:', examsWithMetadata);
           this.takenExams.set(examsWithMetadata);
         },
         error: (error) => {

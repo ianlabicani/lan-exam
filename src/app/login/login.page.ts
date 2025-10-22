@@ -90,7 +90,6 @@ export class LoginPage {
       )
       .subscribe({
         next: (res) => {
-          console.log('Login successful:', res);
           this.router.navigate(['/tabs']);
         },
         error: (err) => {

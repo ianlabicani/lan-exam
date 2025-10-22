@@ -47,12 +47,9 @@ export class MatchingAnswerItemComponent {
 
   getCorrectMatches(): number {
     const userMatches = this.parseMatchingAnswer();
-    console.log(userMatches);
     const parsedPairs = JSON.parse(
       JSON.stringify(this.answer().item?.pairs || [])
     );
-
-    console.log(parsedPairs);
 
     return (
       userMatches.filter((m) =>
