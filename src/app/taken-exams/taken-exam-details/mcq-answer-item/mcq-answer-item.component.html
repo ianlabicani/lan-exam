@@ -1,0 +1,144 @@
+<ion-card class="ion-margin-bottom">
+  <ion-card-header>
+    <div
+      style="
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+      "
+    >
+      <div style="flex: 1">
+        <p
+          style="font-size: 0.875rem; color: var(--ion-color-medium); margin: 0"
+        >
+          Question {{ index + 1 }}
+        </p>
+        <ion-card-title style="margin-top: 4px">{{ question }}</ion-card-title>
+      </div>
+      <div>
+        <ion-icon
+          [name]="
+            isCorrect ? 'checkmark-circle-outline' : 'close-circle-outline'
+          "
+          [style.color]="
+            isCorrect ? 'var(--ion-color-success)' : 'var(--ion-color-danger)'
+          "
+          style="font-size: 24px"
+        ></ion-icon>
+      </div>
+    </div>
+  </ion-card-header>
+
+  <ion-card-content>
+    <div class="ion-margin-bottom">
+      <p
+        class="ion-text-uppercase"
+        style="
+          font-size: 0.75rem;
+          color: var(--ion-color-medium);
+          margin-bottom: 8px;
+        "
+      >
+        Multiple Choice Options
+      </p>
+      <div style="display: flex; flex-direction: column; gap: 8px">
+        @for (option of options; track $index; let optIndex = $index) {
+        <div
+          [style.background-color]="
+            answer.answer === optIndex.toString()
+              ? isCorrect
+                ? 'var(--ion-color-success-tint)'
+                : 'var(--ion-color-danger-tint)'
+              : 'var(--ion-color-step-50)'
+          "
+          [style.border]="
+            answer.answer === optIndex.toString()
+              ? '2px solid ' +
+                (isCorrect
+                  ? 'var(--ion-color-success)'
+                  : 'var(--ion-color-danger)')
+              : '1px solid var(--ion-color-step-200)'
+          "
+          style="border-radius: 8px; padding: 12px; cursor: pointer"
+        >
+          <div style="display: flex; align-items: center; gap: 8px">
+            <span>{{ option.text }}</span>
+            @if (answer.answer === optIndex.toString()) {
+            <ion-icon
+              [name]="
+                isCorrect ? 'checkmark-circle-outline' : 'close-circle-outline'
+              "
+              [style.color]="
+                isCorrect
+                  ? 'var(--ion-color-success)'
+                  : 'var(--ion-color-danger)'
+              "
+              style="font-size: 20px; margin-left: auto"
+            ></ion-icon>
+            }
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+
+    @if (!isCorrect) {
+    <div
+      class="ion-margin-top"
+      style="
+        background-color: var(--ion-color-success-tint);
+        border-left: 4px solid var(--ion-color-success);
+        padding: 12px;
+        border-radius: 4px;
+      "
+    >
+      <p
+        class="ion-text-uppercase"
+        style="
+          font-size: 0.75rem;
+          color: var(--ion-color-medium);
+          margin-bottom: 4px;
+        "
+      >
+        Correct Answer
+      </p>
+      <p style="font-weight: 500; color: var(--ion-color-success)">
+        {{ getCorrectAnswer() }}
+      </p>
+    </div>
+    } @if (answer.feedback) {
+    <div class="ion-margin-top">
+      <p
+        class="ion-text-uppercase"
+        style="
+          font-size: 0.75rem;
+          color: var(--ion-color-medium);
+          margin-bottom: 4px;
+        "
+      >
+        Feedback
+      </p>
+      <p style="font-weight: 500">{{ answer.feedback }}</p>
+    </div>
+    }
+
+    <div
+      class="ion-margin-top"
+      style="
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 12px;
+        border-top: 1px solid var(--ion-color-step-200);
+      "
+    >
+      <span style="font-size: 0.875rem; color: var(--ion-color-medium)"
+        >Points Earned</span
+      >
+      <ion-badge color="primary"
+        >{{ answer.points_earned }} / {{ maxPoints }} pts</ion-badge
+      >
+    </div>
+  </ion-card-content>
+</ion-card>

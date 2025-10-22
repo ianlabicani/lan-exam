@@ -146,66 +146,82 @@
         >
           Answers Review
         </h2>
-        @for (answer of takenExamSig.answers; track answer.id; let i = $index) {
-        <ion-card class="ion-margin-bottom">
-          <ion-card-header>
-            <div
-              style="
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                gap: 12px;
-              "
-            >
-              <div>
-                <p style="font-size: 0.875rem; color: var(--ion-color-medium)">
-                  Question {{ i + 1 }}
-                </p>
-                <ion-card-title style="margin-top: 4px"
-                  >{{ answer.exam_item_id }}</ion-card-title
-                >
-              </div>
-              <ion-badge color="primary">
-                {{ answer.points_earned }} pts
-              </ion-badge>
-            </div>
-          </ion-card-header>
-
-          <ion-card-content>
-            <div class="ion-margin-bottom">
-              <p
-                class="ion-text-uppercase"
-                style="
-                  font-size: 0.75rem;
-                  color: var(--ion-color-medium);
-                  margin-bottom: 4px;
-                "
-              >
-                Your Answer
-              </p>
-              <p style="font-weight: 500">
-                {{ answer.answer || 'No answer provided' }}
-              </p>
-            </div>
-
-            @if (answer.feedback) {
-            <div class="ion-margin-top">
-              <p
-                class="ion-text-uppercase"
-                style="
-                  font-size: 0.75rem;
-                  color: var(--ion-color-medium);
-                  margin-bottom: 4px;
-                "
-              >
-                Feedback
-              </p>
-              <p style="font-weight: 500">{{ answer.feedback }}</p>
-            </div>
-            }
-          </ion-card-content>
-        </ion-card>
+        @for (answer of takenExamSig.answers; track $index; let i = $index) {
+        <!-- MCQ Item -->
+        @if (answer.item.type === 'mcq') {
+        <app-mcq-answer-item
+          [answer]="answer"
+          [index]="i"
+          [question]="answer.item.question"
+          [options]="answer.item.options"
+          [maxPoints]="answer.item.points"
+        ></app-mcq-answer-item>
         }
+
+        <!-- True/False Item -->
+        @if (answer.item.type === 'truefalse') {
+        <app-true-false-answer-item
+          [answer]="answer"
+          [index]="i"
+          [question]="answer.item.question"
+          [expectedAnswer]="answer.item.answer"
+          [maxPoints]="answer.item.points"
+        ></app-true-false-answer-item>
+        }
+
+        <!-- Short Answer Item -->
+        @if (answer.item.type === 'shortanswer') {
+        <app-short-answer-item
+          [answer]="answer"
+          [index]="i"
+          [question]="answer.item.question"
+          [maxPoints]="answer.item.points"
+        ></app-short-answer-item>
+        }
+
+        <!-- Essay Item -->
+        @if (answer.item.type === 'essay') {
+        <app-essay-answer-item
+          [answer]="answer"
+          [index]="i"
+          [question]="answer.item.question"
+          [maxPoints]="answer.item.points"
+        ></app-essay-answer-item>
+        }
+
+        <!-- Fill in the Blank Item -->
+        @if (answer.item.type === 'fillblank') {
+        <app-fill-blank-answer-item
+          [answer]="answer"
+          [index]="i"
+          [question]="answer.item.question"
+          [expectedAnswer]="answer.item.expected_answer"
+          [maxPoints]="answer.item.points"
+        ></app-fill-blank-answer-item>
+        }
+
+        <!-- Matching Item -->
+        @if (answer.item.type === 'matching') {
+        <app-matching-answer-item
+          [answer]="answer"
+          [index]="i"
+          [question]="answer.item.question"
+          [pairs]="answer.item.pairs"
+          [maxPoints]="answer.item.points"
+        ></app-matching-answer-item>
+        }
+
+        <!-- Fallback to generic component -->
+        @if (!answer.item.type || (answer.item.type !== 'mcq' &&
+        answer.item.type !== 'truefalse' && answer.item.type !== 'shortanswer'
+        && answer.item.type !== 'essay' && answer.item.type !== 'fillblank' &&
+        answer.item.type !== 'matching')) {
+        <app-answer-item
+          [answer]="answer"
+          [index]="i"
+          [maxPoints]="answer.item.points"
+        ></app-answer-item>
+        } }
       </div>
       }
 

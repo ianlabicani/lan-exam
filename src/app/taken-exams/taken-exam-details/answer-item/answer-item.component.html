@@ -1,0 +1,60 @@
+<ion-card class="ion-margin-bottom">
+  <ion-card-header>
+    <div
+      style="
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+      "
+    >
+      <div>
+        <p style="font-size: 0.875rem; color: var(--ion-color-medium)">
+          Question {{ index + 1 }}
+        </p>
+        <ion-card-title style="margin-top: 4px">
+          Item #{{ answer.exam_item_id }}
+        </ion-card-title>
+      </div>
+      <div>
+        <ion-badge color="primary">
+          {{ answer.points_earned }} / {{ maxPoints }} pts
+        </ion-badge>
+      </div>
+    </div>
+  </ion-card-header>
+
+  <ion-card-content>
+    <div class="ion-margin-bottom">
+      <p
+        class="ion-text-uppercase"
+        style="
+          font-size: 0.75rem;
+          color: var(--ion-color-medium);
+          margin-bottom: 4px;
+        "
+      >
+        Your Answer
+      </p>
+      <p style="font-weight: 500">
+        {{ answer.answer || "No answer provided" }}
+      </p>
+    </div>
+
+    @if (answer.feedback) {
+    <div class="ion-margin-top">
+      <p
+        class="ion-text-uppercase"
+        style="
+          font-size: 0.75rem;
+          color: var(--ion-color-medium);
+          margin-bottom: 4px;
+        "
+      >
+        Feedback
+      </p>
+      <p style="font-weight: 500">{{ answer.feedback }}</p>
+    </div>
+    }
+  </ion-card-content>
+</ion-card>

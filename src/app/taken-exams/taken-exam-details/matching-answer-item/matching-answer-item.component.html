@@ -1,0 +1,126 @@
+<ion-card class="ion-margin-bottom">
+  <ion-card-header>
+    <div
+      style="
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+      "
+    >
+      <div style="flex: 1">
+        <p
+          style="font-size: 0.875rem; color: var(--ion-color-medium); margin: 0"
+        >
+          Question {{ index + 1 }}
+        </p>
+        <ion-card-title style="margin-top: 4px">{{ question }}</ion-card-title>
+      </div>
+    </div>
+  </ion-card-header>
+
+  <ion-card-content>
+    <div class="ion-margin-bottom">
+      <p
+        class="ion-text-uppercase"
+        style="
+          font-size: 0.75rem;
+          color: var(--ion-color-medium);
+          margin-bottom: 8px;
+        "
+      >
+        Your Matches
+      </p>
+      <div style="display: flex; flex-direction: column; gap: 8px">
+        @for (userMatch of parseMatchingAnswer(); track userMatch.left) { @let
+        isCorrect = isMatchCorrect(userMatch);
+        <div
+          [style.background-color]="
+            isCorrect
+              ? 'var(--ion-color-success-tint)'
+              : 'var(--ion-color-danger-tint)'
+          "
+          [style.border]="
+            '1px solid ' +
+            (isCorrect ? 'var(--ion-color-success)' : 'var(--ion-color-danger)')
+          "
+          style="border-radius: 8px; padding: 12px"
+        >
+          <div style="display: flex; align-items: center; gap: 12px">
+            <div style="flex: 1">
+              <p style="font-weight: bold; margin: 0; font-size: 0.95rem">
+                {{ userMatch.left }}
+              </p>
+            </div>
+            <span style="color: var(--ion-color-medium)">→</span>
+            <div style="flex: 1">
+              <p style="font-weight: bold; margin: 0; font-size: 0.95rem">
+                {{ userMatch.right }}
+              </p>
+            </div>
+            <ion-icon
+              [name]="
+                isCorrect ? 'checkmark-circle-outline' : 'close-circle-outline'
+              "
+              [style.color]="
+                isCorrect
+                  ? 'var(--ion-color-success)'
+                  : 'var(--ion-color-danger)'
+              "
+              style="font-size: 20px; flex-shrink: 0"
+            ></ion-icon>
+          </div>
+        </div>
+        }
+      </div>
+      <div
+        class="ion-margin-top"
+        style="
+          padding-top: 8px;
+          border-top: 1px solid var(--ion-color-step-200);
+        "
+      >
+        <p
+          style="font-size: 0.875rem; color: var(--ion-color-medium); margin: 0"
+        >
+          Correct Matches:
+          <strong>{{ getCorrectMatches() }} / {{ pairs?.length || 0 }}</strong>
+        </p>
+      </div>
+    </div>
+
+    @if (answer.feedback) {
+    <div class="ion-margin-top">
+      <p
+        class="ion-text-uppercase"
+        style="
+          font-size: 0.75rem;
+          color: var(--ion-color-medium);
+          margin-bottom: 4px;
+        "
+      >
+        Feedback
+      </p>
+      <p style="font-weight: 500">{{ answer.feedback }}</p>
+    </div>
+    }
+
+    <div
+      class="ion-margin-top"
+      style="
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 12px;
+        border-top: 1px solid var(--ion-color-step-200);
+      "
+    >
+      <span style="font-size: 0.875rem; color: var(--ion-color-medium)"
+        >Points Earned</span
+      >
+      <ion-badge color="primary"
+        >{{ answer.points_earned }} / {{ maxPoints }} pts</ion-badge
+      >
+    </div>
+  </ion-card-content>
+</ion-card>

@@ -23,7 +23,6 @@ import {
   IonItem,
   IonLabel,
   IonText,
-  IonBadge,
 } from '@ionic/angular/standalone';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -42,6 +41,13 @@ import {
   documentOutline,
 } from 'ionicons/icons';
 import { map, finalize } from 'rxjs';
+import { AnswerItemComponent } from './answer-item/answer-item.component';
+import { McqAnswerItemComponent } from './mcq-answer-item/mcq-answer-item.component';
+import { TrueFalseAnswerItemComponent } from './true-false-answer-item/true-false-answer-item.component';
+import { ShortAnswerItemComponent } from './short-answer-item/short-answer-item.component';
+import { EssayAnswerItemComponent } from './essay-answer-item/essay-answer-item.component';
+import { FillBlankAnswerItemComponent } from './fill-blank-answer-item/fill-blank-answer-item.component';
+import { MatchingAnswerItemComponent } from './matching-answer-item/matching-answer-item.component';
 
 @Component({
   selector: 'app-taken-exam-details',
@@ -69,7 +75,13 @@ import { map, finalize } from 'rxjs';
     IonItem,
     IonLabel,
     IonText,
-    IonBadge,
+    AnswerItemComponent,
+    McqAnswerItemComponent,
+    TrueFalseAnswerItemComponent,
+    ShortAnswerItemComponent,
+    EssayAnswerItemComponent,
+    FillBlankAnswerItemComponent,
+    MatchingAnswerItemComponent,
     CommonModule,
     FormsModule,
     RouterLink,
@@ -200,4 +212,31 @@ export interface Answer {
   feedback: null | string;
   created_at: Date;
   updated_at: Date;
+  item: Item;
+}
+
+export interface Item {
+  id: number;
+  exam_id: number;
+  topic: null | string;
+  type: string;
+  level: string;
+  question: string;
+  points: number;
+  expected_answer: null | string;
+  answer: null | string;
+  options: Option[] | null;
+  pairs: Pair[] | null;
+  created_at: Date;
+  updated_at: Date;
+}
+
+export interface Option {
+  text: string;
+  correct: boolean;
+}
+
+export interface Pair {
+  left: string;
+  right: string;
 }
