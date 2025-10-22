@@ -1,3 +1,9 @@
+@let answerSig = answer();
+@let indexSig = index();
+@let isCorrectSig = isCorrect();
+
+
+
 <ion-card class="ion-margin-bottom">
   <ion-card-header>
     <div
@@ -12,17 +18,17 @@
         <p
           style="font-size: 0.875rem; color: var(--ion-color-medium); margin: 0"
         >
-          Question {{ index + 1 }}
+          Question {{ indexSig + 1 }}
         </p>
-        <ion-card-title style="margin-top: 4px">{{ question }}</ion-card-title>
+        <ion-card-title style="margin-top: 4px">{{ answerSig.item.question }}</ion-card-title>
       </div>
       <div>
         <ion-icon
           [name]="
-            isCorrect ? 'checkmark-circle-outline' : 'close-circle-outline'
+            isCorrectSig ? 'checkmark-circle-outline' : 'close-circle-outline'
           "
           [style.color]="
-            isCorrect ? 'var(--ion-color-success)' : 'var(--ion-color-danger)'
+            isCorrectSig ? 'var(--ion-color-success)' : 'var(--ion-color-danger)'
           "
           style="font-size: 24px"
         ></ion-icon>
@@ -44,27 +50,27 @@
       </p>
       <div
         [style.background-color]="
-          isCorrect
+          isCorrectSig
             ? 'var(--ion-color-success-tint)'
             : 'var(--ion-color-danger-tint)'
         "
         [style.border]="
           '2px solid ' +
-          (isCorrect ? 'var(--ion-color-success)' : 'var(--ion-color-danger)')
+          (isCorrectSig ? 'var(--ion-color-success)' : 'var(--ion-color-danger)')
         "
         style="border-radius: 8px; padding: 12px"
       >
         <div style="display: flex; align-items: center; gap: 8px">
           <span
             style="font-family: monospace; font-weight: bold; font-size: 1rem"
-            >{{ answer.answer || "No answer" }}</span
+            >{{ answerSig.item.answer || "No answer" }}</span
           >
           <ion-icon
             [name]="
-              isCorrect ? 'checkmark-circle-outline' : 'close-circle-outline'
+              isCorrectSig ? 'checkmark-circle-outline' : 'close-circle-outline'
             "
             [style.color]="
-              isCorrect ? 'var(--ion-color-success)' : 'var(--ion-color-danger)'
+              isCorrectSig ? 'var(--ion-color-success)' : 'var(--ion-color-danger)'
             "
             style="font-size: 20px; margin-left: auto"
           ></ion-icon>
@@ -72,7 +78,7 @@
       </div>
     </div>
 
-    @if (!isCorrect && expectedAnswer) {
+    @if (!isCorrectSig && answerSig.item.answer) {
     <div
       class="ion-margin-top"
       style="
@@ -101,10 +107,10 @@
           margin: 0;
         "
       >
-        {{ expectedAnswer }}
+        {{ answerSig.item.answer }}
       </p>
     </div>
-    } @if (answer.feedback) {
+    } @if (answerSig.feedback) {
     <div class="ion-margin-top">
       <p
         class="ion-text-uppercase"
@@ -116,7 +122,7 @@
       >
         Feedback
       </p>
-      <p style="font-weight: 500">{{ answer.feedback }}</p>
+      <p style="font-weight: 500">{{ answerSig.feedback }}</p>
     </div>
     }
 
@@ -134,7 +140,7 @@
         >Points Earned</span
       >
       <ion-badge color="primary"
-        >{{ answer.points_earned }} / {{ maxPoints }} pts</ion-badge
+        >{{ answerSig.points_earned }} / {{ answerSig.item.points }} pts</ion-badge
       >
     </div>
   </ion-card-content>
