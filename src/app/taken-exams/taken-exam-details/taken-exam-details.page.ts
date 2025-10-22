@@ -207,7 +207,7 @@ export interface Answer {
   id: number;
   taken_exam_id: number;
   exam_item_id: number;
-  answer: string;
+  answer: any;
   points_earned: number;
   feedback: string | null;
   created_at: string;

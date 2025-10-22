@@ -1,3 +1,6 @@
+@let answerSig = answer();
+@let indexSig = index();
+
 <ion-card class="ion-margin-bottom">
   <ion-card-header>
     <div
@@ -12,9 +15,9 @@
         <p
           style="font-size: 0.875rem; color: var(--ion-color-medium); margin: 0"
         >
-          Question {{ index + 1 }}
+          Question {{ indexSig + 1 }}
         </p>
-        <ion-card-title style="margin-top: 4px">{{ question }}</ion-card-title>
+        <ion-card-title style="margin-top: 4px">{{ answerSig.item.question }}</ion-card-title>
       </div>
     </div>
   </ion-card-header>
@@ -84,12 +87,12 @@
           style="font-size: 0.875rem; color: var(--ion-color-medium); margin: 0"
         >
           Correct Matches:
-          <strong>{{ getCorrectMatches() }} / {{ pairs?.length || 0 }}</strong>
+          <strong>{{ getCorrectMatches() }} / {{ answerSig.item.pairs?.length || 0 }}</strong>
         </p>
       </div>
     </div>
 
-    @if (answer.feedback) {
+    @if (answerSig.feedback) {
     <div class="ion-margin-top">
       <p
         class="ion-text-uppercase"
@@ -101,7 +104,7 @@
       >
         Feedback
       </p>
-      <p style="font-weight: 500">{{ answer.feedback }}</p>
+      <p style="font-weight: 500">{{ answerSig.feedback }}</p>
     </div>
     }
 
@@ -119,7 +122,7 @@
         >Points Earned</span
       >
       <ion-badge color="primary"
-        >{{ answer.points_earned }} / {{ maxPoints }} pts</ion-badge
+        >{{ answerSig.points_earned }} / {{ answerSig.item.points }} pts</ion-badge
       >
     </div>
   </ion-card-content>
