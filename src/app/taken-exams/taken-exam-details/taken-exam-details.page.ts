@@ -1,3 +1,4 @@
+import { ITakenExam } from './../taken-exams.page';
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -10,11 +11,21 @@ import {
   IonButtons,
   IonCard,
   IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
   IonButton,
   IonIcon,
   IonSpinner,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonProgressBar,
+  IonItem,
+  IonLabel,
+  IonText,
+  IonBadge,
 } from '@ionic/angular/standalone';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { addIcons } from 'ionicons';
@@ -24,33 +35,13 @@ import {
   calendarOutline,
   closeCircleOutline,
   playOutline,
+  timeOutline,
+  helpCircleOutline,
+  checkmarkDoneOutline,
+  arrowForwardOutline,
+  documentOutline,
 } from 'ionicons/icons';
 import { map, finalize } from 'rxjs';
-
-interface ExamQuestion {
-  id: number;
-  question: string;
-  answer: string;
-  user_answer: string;
-  is_correct: boolean;
-  points: number;
-}
-
-interface TakenExamDetail {
-  id: number;
-  exam_id: number;
-  user_id: number;
-  started_at: Date;
-  submitted_at: Date;
-  status: string;
-  total_points: number;
-  questions: ExamQuestion[];
-  exam: {
-    id: number;
-    title: string;
-    total_points: number;
-  };
-}
 
 @Component({
   selector: 'app-taken-exam-details',
@@ -66,11 +57,22 @@ interface TakenExamDetail {
     IonButtons,
     IonCard,
     IonCardContent,
+    IonCardHeader,
+    IonCardTitle,
     IonButton,
     IonIcon,
     IonSpinner,
+    IonGrid,
+    IonRow,
+    IonCol,
+    IonProgressBar,
+    IonItem,
+    IonLabel,
+    IonText,
+    IonBadge,
     CommonModule,
     FormsModule,
+    RouterLink,
   ],
 })
 export class TakenExamDetailsPage {
@@ -78,7 +80,7 @@ export class TakenExamDetailsPage {
   private http = inject(HttpClient);
   private router = inject(Router);
 
-  examDetail = signal<TakenExamDetail | null>(null);
+  takenExam = signal<ITakenExamDetails | null>(null);
   loading = signal(false);
   error = signal<string | null>(null);
   isContinueMode = signal(false);
@@ -90,6 +92,11 @@ export class TakenExamDetailsPage {
       calendarOutline,
       closeCircleOutline,
       playOutline,
+      timeOutline,
+      helpCircleOutline,
+      checkmarkDoneOutline,
+      arrowForwardOutline,
+      documentOutline,
     });
   }
 
@@ -119,7 +126,7 @@ export class TakenExamDetailsPage {
     this.error.set(null);
 
     this.http
-      .get<{ data: TakenExamDetail }>(
+      .get<{ data: ITakenExamDetails }>(
         `${environment.apiBaseUrl}/student/taken-exams/${id}`
       )
       .pipe(
@@ -133,9 +140,9 @@ export class TakenExamDetailsPage {
         })
       )
       .subscribe({
-        next: (detail) => {
-          console.log('Exam detail:', detail);
-          this.examDetail.set(detail);
+        next: (data) => {
+          console.log('Exam detail:', data);
+          this.takenExam.set(data || null);
         },
         error: (error) => {
           console.error('Error fetching exam detail:', error);
@@ -147,21 +154,15 @@ export class TakenExamDetailsPage {
   }
 
   getPercentage(): number {
-    const detail = this.examDetail();
+    const detail = this.takenExam();
     if (
       detail &&
-      detail.exam?.total_points &&
-      detail.total_points !== undefined
+      detail.total_points !== undefined &&
+      detail.total_points !== null
     ) {
-      return (detail.total_points / detail.exam.total_points) * 100;
+      return (detail.total_points / 100) * 100; // Adjust based on your total points scale
     }
     return 0;
-  }
-
-  getCorrectAnswers(): number {
-    const detail = this.examDetail();
-    if (!detail?.questions) return 0;
-    return detail.questions.filter((q) => q.is_correct).length;
   }
 
   goBack() {
@@ -170,9 +171,33 @@ export class TakenExamDetailsPage {
 
   continueExam() {
     // Navigate to exam taking page
-    const id = this.examDetail()?.id;
+    const id = this.takenExam()?.id;
     if (id) {
       this.router.navigate(['/tabs/exams', id, 'take']);
     }
   }
+}
+
+export interface ITakenExamDetails {
+  id: number;
+  exam_id: number;
+  user_id: number;
+  started_at: Date;
+  submitted_at: Date;
+  status: string;
+  total_points: number;
+  created_at: Date;
+  updated_at: Date;
+  answers: Answer[];
+}
+
+export interface Answer {
+  id: number;
+  taken_exam_id: number;
+  exam_item_id: number;
+  answer: string;
+  points_earned: number;
+  feedback: null | string;
+  created_at: Date;
+  updated_at: Date;
 }
