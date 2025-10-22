@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   IonCard,
@@ -28,8 +28,8 @@ import { Answer } from '../taken-exam-details.page';
   ],
 })
 export class TrueFalseAnswerItemComponent {
-  @Input() answer!: Answer;
-  @Input() index: number = 0;
+  answer = input.required<Answer>();
+  index = input.required<number>();
   isCorrect: boolean = false;
 
   constructor() {
@@ -37,13 +37,12 @@ export class TrueFalseAnswerItemComponent {
   }
 
   ngOnInit() {
+    const answer = this.answer();
     // Convert 1/true to boolean for comparison
     const userAnswer =
-      this.answer.answer === '1' ||
-      this.answer.answer?.toLowerCase() === 'true';
+      answer.answer === '1' || answer.answer?.toLowerCase() === 'true';
     const expectedAnswer =
-      this.answer.answer === '1' ||
-      this.answer.answer?.toLowerCase() === 'true';
+      answer.answer === '1' || answer.answer?.toLowerCase() === 'true';
     this.isCorrect = userAnswer === expectedAnswer;
   }
 
