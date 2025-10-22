@@ -194,12 +194,12 @@ export interface ITakenExamDetails {
   id: number;
   exam_id: number;
   user_id: number;
-  started_at: Date;
-  submitted_at: Date;
-  status: string;
+  started_at: string;
+  submitted_at: string;
+  status: 'pending' | 'grading' | 'graded';
   total_points: number;
-  created_at: Date;
-  updated_at: Date;
+  created_at: string;
+  updated_at: string;
   answers: Answer[];
 }
 
@@ -209,26 +209,32 @@ export interface Answer {
   exam_item_id: number;
   answer: string;
   points_earned: number;
-  feedback: null | string;
-  created_at: Date;
-  updated_at: Date;
+  feedback: string | null;
+  created_at: string;
+  updated_at: string;
   item: Item;
 }
 
 export interface Item {
   id: number;
   exam_id: number;
-  topic: null | string;
-  type: string;
-  level: string;
+  topic: string | null;
+  type:
+    | 'mcq'
+    | 'truefalse'
+    | 'shortanswer'
+    | 'essay'
+    | 'fillblank'
+    | 'matching';
+  level: 'easy' | 'moderate' | 'difficult';
   question: string;
   points: number;
-  expected_answer: null | string;
-  answer: null | string;
+  expected_answer: string | null;
+  answer: string | null;
   options: Option[] | null;
   pairs: Pair[] | null;
-  created_at: Date;
-  updated_at: Date;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface Option {

@@ -1,3 +1,5 @@
+@let answerSig = answer();
+
 <ion-card class="ion-margin-bottom">
   <ion-card-header>
     <div
@@ -14,7 +16,9 @@
         >
           Question {{ index + 1 }}
         </p>
-        <ion-card-title style="margin-top: 4px">{{ question }}</ion-card-title>
+        <ion-card-title style="margin-top: 4px">{{
+          answerSig.item.question
+        }}</ion-card-title>
       </div>
       <div>
         <ion-icon
@@ -43,17 +47,18 @@
         Multiple Choice Options
       </p>
       <div style="display: flex; flex-direction: column; gap: 8px">
-        @for (option of options; track $index; let optIndex = $index) {
+        @for (option of answerSig.item.options; track $index; let optIndex =
+        $index) {
         <div
           [style.background-color]="
-            answer.answer === optIndex.toString()
+            answerSig.answer === optIndex.toString()
               ? isCorrect
                 ? 'var(--ion-color-success-tint)'
                 : 'var(--ion-color-danger-tint)'
               : 'var(--ion-color-step-50)'
           "
           [style.border]="
-            answer.answer === optIndex.toString()
+            answerSig.answer === optIndex.toString()
               ? '2px solid ' +
                 (isCorrect
                   ? 'var(--ion-color-success)'
@@ -64,7 +69,7 @@
         >
           <div style="display: flex; align-items: center; gap: 8px">
             <span>{{ option.text }}</span>
-            @if (answer.answer === optIndex.toString()) {
+            @if (answerSig.answer === optIndex.toString()) {
             <ion-icon
               [name]="
                 isCorrect ? 'checkmark-circle-outline' : 'close-circle-outline'
@@ -103,11 +108,9 @@
       >
         Correct Answer
       </p>
-      <p style="font-weight: 500; color: var(--ion-color-success)">
-        {{ getCorrectAnswer() }}
-      </p>
+      <p>{{ correctAnswerText() }}</p>
     </div>
-    } @if (answer.feedback) {
+    } @if (answerSig.feedback) {
     <div class="ion-margin-top">
       <p
         class="ion-text-uppercase"
@@ -119,7 +122,7 @@
       >
         Feedback
       </p>
-      <p style="font-weight: 500">{{ answer.feedback }}</p>
+      <p style="font-weight: 500">{{ answerSig.feedback }}</p>
     </div>
     }
 
@@ -137,7 +140,8 @@
         >Points Earned</span
       >
       <ion-badge color="primary"
-        >{{ answer.points_earned }} / {{ maxPoints }} pts</ion-badge
+        >{{ answerSig.points_earned }} /
+        {{ answerSig.item.points }} pts</ion-badge
       >
     </div>
   </ion-card-content>

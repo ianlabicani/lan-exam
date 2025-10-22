@@ -152,63 +152,60 @@
         <app-mcq-answer-item
           [answer]="answer"
           [index]="i"
-          [question]="answer.item.question"
-          [options]="answer.item.options"
-          [maxPoints]="answer.item.points"
         ></app-mcq-answer-item>
         }
 
         <!-- True/False Item -->
         @if (answer.item.type === 'truefalse') {
-        <app-true-false-answer-item
+        <!-- <app-true-false-answer-item
           [answer]="answer"
           [index]="i"
           [question]="answer.item.question"
           [expectedAnswer]="answer.item.answer"
           [maxPoints]="answer.item.points"
-        ></app-true-false-answer-item>
+        ></app-true-false-answer-item> -->
         }
 
         <!-- Short Answer Item -->
         @if (answer.item.type === 'shortanswer') {
-        <app-short-answer-item
+        <!-- <app-short-answer-item
           [answer]="answer"
           [index]="i"
           [question]="answer.item.question"
           [maxPoints]="answer.item.points"
-        ></app-short-answer-item>
+        ></app-short-answer-item> -->
         }
 
         <!-- Essay Item -->
         @if (answer.item.type === 'essay') {
-        <app-essay-answer-item
+        <!-- <app-essay-answer-item
           [answer]="answer"
           [index]="i"
           [question]="answer.item.question"
           [maxPoints]="answer.item.points"
-        ></app-essay-answer-item>
+        ></app-essay-answer-item> -->
         }
 
         <!-- Fill in the Blank Item -->
         @if (answer.item.type === 'fillblank') {
-        <app-fill-blank-answer-item
+        <!-- <app-fill-blank-answer-item
           [answer]="answer"
           [index]="i"
           [question]="answer.item.question"
           [expectedAnswer]="answer.item.expected_answer"
           [maxPoints]="answer.item.points"
-        ></app-fill-blank-answer-item>
+        ></app-fill-blank-answer-item> -->
         }
 
         <!-- Matching Item -->
         @if (answer.item.type === 'matching') {
-        <app-matching-answer-item
+        <!-- <app-matching-answer-item
           [answer]="answer"
           [index]="i"
           [question]="answer.item.question"
           [pairs]="answer.item.pairs"
           [maxPoints]="answer.item.points"
-        ></app-matching-answer-item>
+        ></app-matching-answer-item> -->
         }
 
         <!-- Fallback to generic component -->
@@ -216,11 +213,11 @@
         answer.item.type !== 'truefalse' && answer.item.type !== 'shortanswer'
         && answer.item.type !== 'essay' && answer.item.type !== 'fillblank' &&
         answer.item.type !== 'matching')) {
-        <app-answer-item
+        <!-- <app-answer-item
           [answer]="answer"
           [index]="i"
           [maxPoints]="answer.item.points"
-        ></app-answer-item>
+        ></app-answer-item> -->
         } }
       </div>
       }
