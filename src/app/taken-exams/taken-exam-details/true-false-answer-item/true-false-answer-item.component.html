@@ -14,7 +14,9 @@
         >
           Question {{ index + 1 }}
         </p>
-        <ion-card-title style="margin-top: 4px">{{ question }}</ion-card-title>
+        <ion-card-title style="margin-top: 4px">{{
+          answer.item.question
+        }}</ion-card-title>
       </div>
       <div>
         <ion-icon
@@ -98,7 +100,7 @@
           color: var(--ion-color-success);
         "
       >
-        {{ expectedAnswer ? getAnswerDisplay(expectedAnswer) : "N/A" }}
+        {{ answer.answer ? getAnswerDisplay(answer.answer) : "N/A" }}
       </p>
     </div>
     } @if (answer.feedback) {
@@ -131,7 +133,7 @@
         >Points Earned</span
       >
       <ion-badge color="primary"
-        >{{ answer.points_earned }} / {{ maxPoints }} pts</ion-badge
+        >{{ answer.points_earned }} / {{ answer.item.points }} pts</ion-badge
       >
     </div>
   </ion-card-content>

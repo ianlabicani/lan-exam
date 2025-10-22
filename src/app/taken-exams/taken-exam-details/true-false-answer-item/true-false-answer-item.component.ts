@@ -10,17 +10,7 @@ import {
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { checkmarkCircleOutline, closeCircleOutline } from 'ionicons/icons';
-
-export interface Answer {
-  id: number;
-  taken_exam_id: number;
-  exam_item_id: number;
-  answer: string;
-  points_earned: number;
-  feedback: null | string;
-  created_at: Date;
-  updated_at: Date;
-}
+import { Answer } from '../taken-exam-details.page';
 
 @Component({
   selector: 'app-true-false-answer-item',
@@ -40,10 +30,6 @@ export interface Answer {
 export class TrueFalseAnswerItemComponent {
   @Input() answer!: Answer;
   @Input() index: number = 0;
-  @Input() question?: string | null;
-  @Input() expectedAnswer?: string | null;
-  @Input() maxPoints?: number | null;
-
   isCorrect: boolean = false;
 
   constructor() {
@@ -56,8 +42,8 @@ export class TrueFalseAnswerItemComponent {
       this.answer.answer === '1' ||
       this.answer.answer?.toLowerCase() === 'true';
     const expectedAnswer =
-      this.expectedAnswer === '1' ||
-      this.expectedAnswer?.toLowerCase() === 'true';
+      this.answer.answer === '1' ||
+      this.answer.answer?.toLowerCase() === 'true';
     this.isCorrect = userAnswer === expectedAnswer;
   }
 
