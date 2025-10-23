@@ -39,7 +39,7 @@ export const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: '/tabs/exams',
+        redirectTo: 'exams',
         pathMatch: 'full',
       },
     ],
