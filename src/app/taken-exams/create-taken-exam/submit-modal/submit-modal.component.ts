@@ -1,21 +1,12 @@
 import {
   Component,
-  Input,
-  Output,
-  EventEmitter,
   CUSTOM_ELEMENTS_SCHEMA,
+  computed,
+  input,
+  output,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  IonModal,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonContent,
-  IonButton,
-  IonButtons,
-  IonText,
-} from '@ionic/angular/standalone';
+import { IonModal, IonButton } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-submit-modal',
@@ -23,34 +14,29 @@ import {
   styleUrls: ['./submit-modal.component.scss'],
   standalone: true,
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  imports: [
-    CommonModule,
-    IonModal,
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-    IonContent,
-    IonButton,
-    IonText,
-  ],
+  imports: [CommonModule, IonModal, IonButton],
 })
 export class SubmitModalComponent {
-  @Input() isOpen: boolean = false;
-  @Input() answeredCount: number = 0;
-  @Input() totalQuestions: number = 0;
-  @Input() isSubmitting: boolean = false;
-  @Output() onClose = new EventEmitter<void>();
-  @Output() onSubmit = new EventEmitter<void>();
+  // Input signals
+  readonly isOpenSig = input(false);
+  readonly answeredCountSig = input(0);
+  readonly totalQuestionsSig = input(0);
+  readonly isSubmittingSig = input(false);
 
-  get unansweredCount(): number {
-    return this.totalQuestions - this.answeredCount;
-  }
+  // Output
+  readonly onCloseSig = output<void>();
+  readonly onSubmitSig = output<void>();
+
+  // Computed
+  readonly unansweredCountSig = computed(() => {
+    return this.totalQuestionsSig() - this.answeredCountSig();
+  });
 
   handleCancel() {
-    this.onClose.emit();
+    this.onCloseSig.emit();
   }
 
   handleSubmit() {
-    this.onSubmit.emit();
+    this.onSubmitSig.emit();
   }
 }

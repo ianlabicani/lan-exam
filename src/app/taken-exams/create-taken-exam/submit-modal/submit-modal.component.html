@@ -1,27 +1,31 @@
-<ion-modal [isOpen]="isOpen" (ionModalDidDismiss)="handleCancel()">
-  <ion-header>
-    <ion-toolbar color="primary">
-      <ion-title>Submit Exam?</ion-title>
-    </ion-toolbar>
-  </ion-header>
-  <ion-content class="ion-padding">
-    <ion-text>
-      <h2>Are you sure you want to submit your exam?</h2>
-      <p style="margin-top: 16px;">
-        You have answered <strong>{{ answeredCount }}</strong> out of <strong>{{ totalQuestions }}</strong> questions.
-      </p>
-      <p *ngIf="unansweredCount > 0" style="color: var(--ion-color-warning);">
-        <strong>{{ unansweredCount }}</strong> question(s) remain unanswered.
-      </p>
-    </ion-text>
+<ion-modal [isOpen]="isOpenSig()" (ionModalDidDismiss)="handleCancel()" class="submit-modal">
+  <ng-template>
+    <div class="dialog-wrapper">
+      <h1 class="dialog-header">Submit Exam?</h1>
 
-    <div style="margin-top: 24px; display: flex; gap: 12px;">
-      <ion-button expand="block" color="medium" (click)="handleCancel()" [disabled]="isSubmitting">
-        Cancel
-      </ion-button>
-      <ion-button expand="block" color="success" (click)="handleSubmit()" [disabled]="isSubmitting" [class.ion-button-loading]="isSubmitting">
-        {{ isSubmitting ? 'Submitting...' : 'Submit Exam' }}
-      </ion-button>
+      <div class="dialog-content">
+        <p class="dialog-text">
+          Are you sure you want to submit your exam?
+        </p>
+        <p class="dialog-info">
+          You have answered <strong>{{ answeredCountSig() }}</strong> out of <strong>{{ totalQuestionsSig() }}</strong> questions.
+        </p>
+        @if (unansweredCountSig() > 0) {
+          <p class="dialog-warning">
+            <ion-icon name="alert-circle"></ion-icon>
+            <strong>{{ unansweredCountSig() }}</strong> question(s) remain unanswered.
+          </p>
+        }
+      </div>
+
+      <div class="dialog-actions">
+        <ion-button expand="block" fill="outline" color="medium" (click)="handleCancel()" [disabled]="isSubmittingSig()">
+          Cancel
+        </ion-button>
+        <ion-button expand="block" color="success" (click)="handleSubmit()" [disabled]="isSubmittingSig()">
+          {{ isSubmittingSig() ? 'Submitting...' : 'Submit Exam' }}
+        </ion-button>
+      </div>
     </div>
-  </ion-content>
+  </ng-template>
 </ion-modal>

@@ -4,6 +4,10 @@ import {
   Output,
   EventEmitter,
   CUSTOM_ELEMENTS_SCHEMA,
+  computed,
+  signal,
+  input,
+  output,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -14,15 +18,7 @@ import {
   IonCardTitle,
   IonInput,
   IonTextarea,
-  IonRadio,
-  IonRadioGroup,
-  IonToggle,
-  IonLabel,
-  IonButton,
   IonText,
-  IonIcon,
-  IonNote,
-  IonItem,
 } from '@ionic/angular/standalone';
 import { IExamItem } from '../create-taken-exam.page';
 
@@ -41,38 +37,62 @@ import { IExamItem } from '../create-taken-exam.page';
     IonCardTitle,
     IonInput,
     IonTextarea,
-    IonRadio,
-    IonRadioGroup,
-    IonLabel,
-    IonButton,
     IonText,
-    IonNote,
-    IonItem,
   ],
 })
 export class ExamQuestionComponent {
-  @Input() item: IExamItem | null = null;
-  @Input() currentAnswer: any = null;
-  @Input() index: number = 0;
-  @Input() isReadonly: boolean = false;
-  @Output() answerChange = new EventEmitter<any>();
+  // Input signals
+  readonly item = input<IExamItem | null>(null);
+  readonly currentAnswer = input<any>(null);
+  readonly index = input(0);
+  readonly isReadonly = input(false);
 
-  onAnswerChange(value: any) {
-    if (!this.isReadonly) {
+  // Output
+  readonly answerChange = output<any>();
+
+  protected readonly letters = ['A', 'B', 'C', 'D', 'E', 'F'];
+
+  setMcq(idx: number) {
+    if (!this.isReadonly()) {
+      this.answerChange.emit(idx);
+    }
+  }
+
+  setTrueFalse(value: boolean) {
+    if (!this.isReadonly()) {
       this.answerChange.emit(value);
     }
   }
 
-  getTypeLabel(type?: string): string {
-    const labels: Record<string, string> = {
-      mcq: 'Multiple Choice',
-      truefalse: 'True/False',
-      essay: 'Essay',
-      fillblank: 'Fill in the Blank',
-      shortanswer: 'Short Answer',
-      matching: 'Matching',
-    };
-    return labels[type || ''] || type || 'Unknown';
+  onText(value: string) {
+    if (!this.isReadonly()) {
+      this.answerChange.emit(value);
+    }
+  }
+
+  onEssay(value: string) {
+    if (!this.isReadonly()) {
+      this.answerChange.emit(value);
+    }
+  }
+
+  setMatching(pairIndex: number, optionIndex: string) {
+    if (!this.isReadonly()) {
+      const matchingAnswers = this.currentAnswer() || {};
+      matchingAnswers[pairIndex] = optionIndex
+        ? parseInt(optionIndex, 10)
+        : null;
+      this.answerChange.emit(matchingAnswers);
+    }
+  }
+
+  getCurrentAnswer(pairIndex: number): string {
+    const itemValue = this.item();
+    const currentAnswerValue = this.currentAnswer();
+    if (!itemValue?.pairs || !currentAnswerValue) return '';
+    const optionIndex = currentAnswerValue[pairIndex];
+    if (optionIndex === null || optionIndex === undefined) return '';
+    return itemValue.pairs[optionIndex]?.right || '';
   }
 
   countWords(text: string): number {

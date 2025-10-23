@@ -1,0 +1,116 @@
+.state-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+}
+
+.state-content {
+  text-align: center;
+}
+
+.state-text {
+  display: block;
+  margin-top: 16px;
+}
+
+.error-container {
+  padding: 24px;
+  text-align: center;
+}
+
+.error-button {
+  margin-top: 16px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 48px 16px;
+}
+
+.empty-state-button {
+  margin-top: 16px;
+}
+
+.content-container {
+  padding: 16px;
+}
+
+.question-container {
+  margin-top: 24px;
+}
+
+.navigation-container {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.question-navigator {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+  align-items: center;
+}
+
+.question-button {
+  border: none;
+  border-radius: 4px;
+  padding: 6px 8px;
+  font-size: 12px;
+  cursor: pointer;
+  background-color: #f0f0f0;
+  color: black;
+  transition: all 0.2s ease;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &.current {
+    background-color: #1f51ff;
+    color: white;
+  }
+
+  &.answered {
+    background-color: #2dd36f;
+    color: white;
+  }
+}
+
+.submit-section {
+  margin-top: 32px;
+  padding-bottom: 32px;
+}
+
+.submit-info-box {
+  text-align: center;
+  padding: 16px;
+  background-color: var(--ion-color-light);
+  border-radius: 8px;
+}
+
+.submit-button {
+  margin-top: 12px;
+}
+
+.submit-success-box {
+  text-align: center;
+  padding: 24px;
+  background-color: var(--ion-color-success);
+  border-radius: 8px;
+  color: white;
+
+  h3 {
+    margin: 0;
+  }
+}
+
+.success-message {
+  margin-top: 12px;
+}

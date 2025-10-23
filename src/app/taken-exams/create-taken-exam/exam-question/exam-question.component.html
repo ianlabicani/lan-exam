@@ -1,97 +1,162 @@
-<ion-card *ngIf="item">
+@let isReadonlySig = isReadonly();
+@let itemSig = item();
+@let currentAnswerSig = currentAnswer();
+@let indexSig = index();
+
+<ion-card *ngIf="itemSig">
   <ion-card-header>
-    <div style="display: flex; justify-content: space-between; align-items: start;">
-      <div>
-        <ion-text color="medium">
-          <p style="font-size: 12px; margin: 0;">
-            Question {{ index + 1 }} • {{ getTypeLabel(item.type) }}
-          </p>
-        </ion-text>
-        <ion-card-title>{{ item.question }}</ion-card-title>
+    <div class="question-header">
+      <div class="question-meta">
+        <span class="question-number">{{ indexSig + 1 }}</span>
+        <span class="question-points">{{ itemSig.points }} pts</span>
+        <span class="question-type">{{ itemSig.type }}</span>
       </div>
-      <ion-note color="primary">{{ item.points }} pts</ion-note>
     </div>
+    <ion-card-title class="question-title">{{ itemSig.question }}</ion-card-title>
   </ion-card-header>
 
   <ion-card-content>
-    <!-- MCQ -->
-    <div *ngIf="item.type === 'mcq'">
-      <ion-radio-group [value]="currentAnswer" (ionChange)="onAnswerChange($event.detail.value)">
-        <ion-label>
-          <ion-text>Select one option:</ion-text>
-        </ion-label>
-        <div style="margin-top: 12px;">
-          <div *ngFor="let option of item.options; let idx = index" style="margin-bottom: 8px;">
-            <ion-item lines="none">
-              <ion-radio [value]="idx" slot="start"></ion-radio>
-              <ion-label>{{ option.text }}</ion-label>
-            </ion-item>
-          </div>
+    @switch (itemSig.type) {
+      <!-- MCQ -->
+      @case ('mcq') {
+        <div class="options-container">
+          @for (option of itemSig.options; let idx = $index; track idx) {
+            <button
+              type="button"
+              class="option-button"
+              [class.selected]="currentAnswerSig === idx"
+              (click)="setMcq(idx)"
+              [disabled]="isReadonlySig">
+              <span class="option-letter">{{ letters[idx] }}</span>
+              <span class="option-text">{{ option.text }}</span>
+            </button>
+          }
         </div>
-      </ion-radio-group>
-    </div>
+      }
 
-    <!-- True/False -->
-    <div *ngIf="item.type === 'truefalse'" style="display: flex; gap: 12px; margin-top: 12px;">
-      <ion-button [color]="currentAnswer === true ? 'success' : 'medium'"
-                  (click)="onAnswerChange(true)"
-                  expand="block"
-                  [disabled]="isReadonly">
-        True
-      </ion-button>
-      <ion-button [color]="currentAnswer === false ? 'danger' : 'medium'"
-                  (click)="onAnswerChange(false)"
-                  expand="block"
-                  [disabled]="isReadonly">
-        False
-      </ion-button>
-    </div>
-
-    <!-- Short Answer / Fill Blank -->
-    <div *ngIf="item.type === 'shortanswer' || item.type === 'fillblank'">
-      <ion-input
-        [value]="currentAnswer"
-        (ionChange)="onAnswerChange($event.detail.value)"
-        placeholder="Enter your answer"
-        [disabled]="isReadonly"
-        clearInput
-      ></ion-input>
-    </div>
-
-    <!-- Essay -->
-    <div *ngIf="item.type === 'essay'">
-      <ion-textarea
-        [value]="currentAnswer"
-        (ionChange)="onAnswerChange($event.detail.value)"
-        placeholder="Write your essay here..."
-        rows="6"
-        [disabled]="isReadonly"
-      ></ion-textarea>
-      <ion-text color="medium" *ngIf="currentAnswer">
-        <p style="font-size: 12px; margin-top: 8px;">
-          Words: {{ countWords(currentAnswer) }}
-        </p>
-      </ion-text>
-    </div>
-
-    <!-- Matching -->
-    <div *ngIf="item.type === 'matching'">
-      <ion-text color="medium">
-        <p style="font-size: 12px;">Match left items to right items:</p>
-      </ion-text>
-      <div style="margin-top: 12px; font-size: 12px;">
-        <div *ngFor="let pair of item.pairs; let idx = index" style="margin-bottom: 12px; padding: 8px; background: var(--ion-color-light); border-radius: 4px;">
-          <div style="display: flex; gap: 8px; align-items: center;">
-            <span style="flex: 1;">{{ pair.left }}</span>
-            <span>→</span>
-            <ion-input
-              placeholder="Match with..."
-              [disabled]="isReadonly"
-              style="flex: 1;"
-            ></ion-input>
-          </div>
+      <!-- True/False -->
+      @case ('truefalse') {
+        <div class="true-false-container">
+          <button
+            type="button"
+            class="true-false-button"
+            [class.selected-true]="currentAnswerSig === true"
+            (click)="setTrueFalse(true)"
+            [disabled]="isReadonlySig">
+            True
+          </button>
+          <button
+            type="button"
+            class="true-false-button"
+            [class.selected-false]="currentAnswerSig === false"
+            (click)="setTrueFalse(false)"
+            [disabled]="isReadonlySig">
+            False
+          </button>
         </div>
-      </div>
-    </div>
+      }
+
+      <!-- Fill in the Blank -->
+      @case ('fillblank') {
+        <ion-input
+          [value]="currentAnswerSig || ''"
+          (ionChange)="onText($event.detail.value || '')"
+          placeholder="Enter your answer"
+          [disabled]="isReadonlySig"
+          clearInput
+          class="answer-input">
+        </ion-input>
+      }
+
+      <!-- Short Answer -->
+      @case ('shortanswer') {
+        <ion-textarea
+          [value]="currentAnswerSig || ''"
+          (ionChange)="onText($event.detail.value || '')"
+          placeholder="Type your answer here..."
+          rows="3"
+          [disabled]="isReadonlySig"
+          class="answer-textarea">
+        </ion-textarea>
+      }
+
+      <!-- Essay -->
+      @case ('essay') {
+        <div>
+          <ion-textarea
+            [value]="currentAnswerSig || ''"
+            (ionChange)="onEssay($event.detail.value || '')"
+            placeholder="Type your answer here..."
+            rows="5"
+            [disabled]="isReadonlySig"
+            class="answer-textarea">
+          </ion-textarea>
+          @if (currentAnswerSig) {
+            <ion-text color="medium" class="word-count">
+              <p>Words: {{ countWords(currentAnswerSig) }}</p>
+            </ion-text>
+          }
+        </div>
+      }
+
+      <!-- Matching -->
+      @case ('matching') {
+        @if (itemSig.pairs?.length) {
+          <div class="matching-container">
+            <!-- Left Column -->
+            <div class="matching-column">
+              <p class="column-label">Left</p>
+              <ul class="matching-list">
+                @for (pair of itemSig.pairs; track $index) {
+                  <li class="matching-item">{{ pair.left }}</li>
+                }
+              </ul>
+            </div>
+
+            <!-- Middle Column - Current Answer -->
+            <div class="matching-column">
+              <p class="column-label">Your Answer</p>
+              <ul class="matching-list">
+                @for (pair of itemSig.pairs; track $index; let i = $index) {
+                  <li class="matching-answer" [class.answered]="getCurrentAnswer(i)">
+                    {{ getCurrentAnswer(i) || '—' }}
+                  </li>
+                }
+              </ul>
+            </div>
+
+            <!-- Right Column - Options -->
+            <div class="matching-column">
+              <p class="column-label">Select Option</p>
+              <ul class="matching-list">
+                @for (pair of itemSig.pairs; track $index; let i = $index) {
+                  <li>
+                    <select
+                      class="matching-select"
+                      (change)="setMatching(i, $any($event.target).value)"
+                      [disabled]="isReadonlySig">
+                      <option value="">Select…</option>
+                      @for (right of itemSig.pairs; track $index; let j = $index) {
+                        <option [value]="'' + j">{{ right.right }}</option>
+                      }
+                    </select>
+                  </li>
+                }
+              </ul>
+            </div>
+          </div>
+        } @else {
+          <ion-text color="medium">
+            <p>No pairs provided.</p>
+          </ion-text>
+        }
+      }
+
+      @default {
+        <ion-text color="danger">
+          <p>Unknown question type: {{ itemSig.type }}</p>
+        </ion-text>
+      }
+    }
   </ion-card-content>
 </ion-card>
