@@ -15,6 +15,14 @@ import {
   IonInput,
   IonCheckbox,
   IonSpinner,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardContent,
+  IonList,
+  IonText,
+  IonLabel,
+  IonAlert,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -44,6 +52,14 @@ import { finalize } from 'rxjs';
     IonInput,
     IonCheckbox,
     IonSpinner,
+    IonCard,
+    IonCardHeader,
+    IonCardTitle,
+    IonCardContent,
+    IonList,
+    IonText,
+    IonLabel,
+    IonAlert,
   ],
 })
 export class LoginPage {

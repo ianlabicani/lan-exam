@@ -1,99 +1,106 @@
-<ion-content>
-  <div class="flex justify-center items-center min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
-    <div class="w-10/12 max-w-md bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
-      <h2 class="text-3xl font-bold text-center text-indigo-600 mb-8">
-        Welcome Back
-      </h2>
+<ion-content class="ion-padding">
+  <div style="display: flex; justify-content: center; align-items: center; min-height: 100vh;">
+    <ion-card style="width: 100%; max-width: 400px;">
+      <ion-card-header>
+        <ion-card-title class="ion-text-center ion-padding">
+          Welcome Back
+        </ion-card-title>
+      </ion-card-header>
 
-      <form [formGroup]="form" (ngSubmit)="login()" class="space-y-5">
-        <!-- Email -->
-        <div>
-          <label class="block text-gray-900 mb-2 font-semibold text-sm">Email</label>
-          <ion-item lines="none" class="rounded-xl border border-gray-200 bg-white">
-            <ion-icon name="mail-outline" slot="start" class="text-indigo-500 mr-3"></ion-icon>
-            <ion-input
-              type="email"
-              formControlName="email"
-              placeholder="Enter your email"
-              class="text-base"
-            ></ion-input>
-          </ion-item>
+      <ion-card-content>
+        <form [formGroup]="form" (ngSubmit)="login()">
+          <!-- Email -->
+          <ion-list>
+            <ion-item>
+              <ion-icon name="mail-outline" slot="start"></ion-icon>
+              <ion-input
+                type="email"
+                formControlName="email"
+                placeholder="Enter your email"
+              ></ion-input>
+            </ion-item>
             @if (form.controls.email.invalid && (form.controls.email.dirty || form.controls.email.touched)) {
-              <div class="text-red-600 text-xs mt-2 font-medium">
+              <ion-text color="danger">
                 @if (form.controls.email.errors?.['required']) {
-                  <span>Email is required.</span>
+                  <p style="font-size: 12px; margin: 8px 16px 0 16px;">Email is required.</p>
                 } @else if (form.controls.email.errors?.['email']) {
-                  <span>Please enter a valid email address.</span>
+                  <p style="font-size: 12px; margin: 8px 16px 0 16px;">Please enter a valid email address.</p>
                 }
-              </div>
+              </ion-text>
             }
-        </div>
+          </ion-list>
 
-        <!-- Password -->
-        @let passwordVisibleSig = passwordVisible();
+          <!-- Password -->
+          @let passwordVisibleSig = passwordVisible();
 
-        <div>
-          <label class="block text-gray-900 mb-2 font-semibold text-sm">Password</label>
-          <ion-item lines="none" class="rounded-xl border border-gray-200 bg-white">
-            <ion-icon name="lock-closed-outline" slot="start" class="text-indigo-500 mr-3"></ion-icon>
-            <ion-input
-              [type]="passwordVisibleSig ? 'text' : 'password'"
-              formControlName="password"
-              placeholder="Enter your password"
-              class="text-base"
-            ></ion-input>
-            <ion-icon
-              [name]="passwordVisibleSig ? 'eye-off-outline' : 'eye-outline'"
-              slot="end"
-              class="cursor-pointer text-indigo-500 hover:text-indigo-700 transition-colors"
-              (click)="togglePassword()"
-            ></ion-icon>
-          </ion-item>
+          <ion-list>
+            <ion-item>
+              <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+              <ion-input
+                [type]="passwordVisibleSig ? 'text' : 'password'"
+                formControlName="password"
+                placeholder="Enter your password"
+              ></ion-input>
+              <ion-icon
+                [name]="passwordVisibleSig ? 'eye-off-outline' : 'eye-outline'"
+                slot="end"
+                (click)="togglePassword()"
+                style="cursor: pointer;"
+              ></ion-icon>
+            </ion-item>
             @if (form.controls.password.invalid && (form.controls.password.dirty || form.controls.password.touched)) {
-              <div class="text-red-600 text-xs mt-2 font-medium">
+              <ion-text color="danger">
                 @if (form.controls.password.errors?.['required']) {
-                  <span>Password is required.</span>
+                  <p style="font-size: 12px; margin: 8px 16px 0 16px;">Password is required.</p>
                 } @else if (form.controls.password.errors?.['minlength']) {
-                  <span>Password must be at least 6 characters long.</span>
+                  <p style="font-size: 12px; margin: 8px 16px 0 16px;">Password must be at least 6 characters long.</p>
                 }
-              </div>
+              </ion-text>
             }
-        </div>
+          </ion-list>
 
-        <!-- Remember Me -->
-        <div class="flex items-center justify-between pt-2">
-          <div class="flex items-center space-x-2">
-            <ion-checkbox formControlName="remember" color="indigo"></ion-checkbox>
-            <label class="text-gray-700 text-sm font-medium">Remember me</label>
+          <!-- Remember Me -->
+          <ion-item lines="none">
+            <ion-checkbox formControlName="remember"></ion-checkbox>
+            <ion-label>Remember me</ion-label>
+          </ion-item>
+
+          <!-- Forgot Password Link -->
+          <div style="text-align: right; margin: 16px 0;">
+            <ion-text>
+              <a href="#" style="text-decoration: none; color: var(--ion-color-primary);">Forgot Password?</a>
+            </ion-text>
           </div>
-          <a href="#" class="text-sm text-indigo-600 hover:text-indigo-700 font-medium transition-colors">Forgot Password?</a>
-        </div>
 
-        <!-- Error Alert -->
-        @if (errorMessage()) {
-          <div class="rounded-xl bg-red-50 border border-red-200 p-3 mb-4">
-            <p class="text-red-700 text-sm font-medium">{{ errorMessage() }}</p>
-          </div>
-        }
-
-        <!-- Submit Button -->
-        <ion-button
-          expand="block"
-          type="submit"
-          [disabled]="form.invalid || isSigningIn()"
-          class="mt-8 bg-indigo-600! hover:bg-indigo-700! text-white! font-semibold rounded-xl py-3 transition-colors shadow-none!"
-        >
-          @if (isSigningIn()) {
-            <ion-spinner name="dots" slot="start" class="mr-2"></ion-spinner>
-            Signing in...
-          } @else {
-            <ion-icon name="log-in-outline" slot="start" class="mr-2"></ion-icon>
-            Login
+          <!-- Error Alert -->
+          @if (errorMessage()) {
+            <ion-alert
+              [isOpen]="!!errorMessage()"
+              header="Login Error"
+              [message]="errorMessage() || ''"
+              [buttons]="['OK']"
+              (didDismiss)="errorMessage.set(null)"
+            ></ion-alert>
           }
-        </ion-button>
-      </form>
 
-    </div>
+          <!-- Submit Button -->
+          <ion-button
+            expand="block"
+            type="submit"
+            [disabled]="form.invalid || isSigningIn()"
+            color="primary"
+          >
+            @if (isSigningIn()) {
+              <ion-spinner name="dots" slot="start"></ion-spinner>
+              Signing in...
+            } @else {
+              <ion-icon name="log-in-outline" slot="start"></ion-icon>
+              Login
+            }
+          </ion-button>
+        </form>
+      </ion-card-content>
+    </ion-card>
   </div>
 
 </ion-content>
