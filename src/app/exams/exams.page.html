@@ -94,7 +94,7 @@
             </p>
           </div>
           <ion-badge
-            [color]="getStatusColor(exam.status)"
+            [color]="exam.status | statusColor"
             style="text-transform: capitalize; white-space: nowrap"
           >
             {{ exam.status }}
@@ -115,7 +115,7 @@
               "
             ></ion-icon>
             <span style="font-size: 0.875rem">
-              {{ formatDate(exam.starts_at) }} - {{ formatDate(exam.ends_at) }}
+              {{ exam.starts_at | formatDate }} - {{ exam.ends_at | formatDate }}
             </span>
           </div>
 

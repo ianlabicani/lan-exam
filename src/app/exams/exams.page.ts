@@ -28,6 +28,7 @@ import {
   helpCircleOutline,
 } from 'ionicons/icons';
 import { map, finalize } from 'rxjs';
+import { StatusColorPipe, FormatDatePipe } from './exams.pipes';
 
 @Component({
   selector: 'app-exams',
@@ -51,6 +52,8 @@ import { map, finalize } from 'rxjs';
     FormsModule,
     IonRouterLink,
     RouterLink,
+    StatusColorPipe,
+    FormatDatePipe,
   ],
 })
 export class ExamsPage {
@@ -83,6 +86,8 @@ export class ExamsPage {
       .get<{ data: IExam[] }>(`${environment.apiBaseUrl}/student/exams`)
       .pipe(
         map((res) => {
+          console.log(res);
+
           return res;
         }),
         finalize(() => {
@@ -132,43 +137,6 @@ export class ExamsPage {
           console.error('Error starting exam:', err);
         },
       });
-  }
-
-  getStatusIcon(status: string): string {
-    switch (status) {
-      case 'ongoing':
-        return 'play-outline';
-      case 'completed':
-        return 'checkmark-circle-outline';
-      case 'pending':
-        return 'help-circle-outline';
-      default:
-        return 'help-circle-outline';
-    }
-  }
-
-  getStatusColor(status: string): string {
-    switch (status) {
-      case 'ongoing':
-        return 'warning';
-      case 'completed':
-        return 'success';
-      case 'pending':
-        return 'medium';
-      default:
-        return 'medium';
-    }
-  }
-
-  formatDate(dateString: string): string {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
   }
 }
 
