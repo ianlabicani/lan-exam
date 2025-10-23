@@ -175,7 +175,7 @@
             Start Exam
           </ion-button>
           } @else if (exam.action == 'continue') {
-          <ion-button expand="block" fill="outline" color="primary" (click)="continueExam(exam)">
+          <ion-button expand="block" fill="outline" color="primary" [routerLink]="['/tabs/taken-exams', exam.taken_exam?.id, 'create']">
             <ion-icon
               [name]="
                 exam.taken_exam?.status === 'completed'

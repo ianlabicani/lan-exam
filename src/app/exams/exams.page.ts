@@ -14,10 +14,11 @@ import {
   IonIcon,
   IonBadge,
   IonSpinner,
+  IonRouterLink,
 } from '@ionic/angular/standalone';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { addIcons } from 'ionicons';
 import {
   playOutline,
@@ -48,6 +49,8 @@ import { map, finalize } from 'rxjs';
     IonSpinner,
     CommonModule,
     FormsModule,
+    IonRouterLink,
+    RouterLink,
   ],
 })
 export class ExamsPage {
@@ -155,10 +158,6 @@ export class ExamsPage {
       default:
         return 'medium';
     }
-  }
-
-  continueExam(exam: IExam) {
-    this.router.navigate(['/tabs/taken-exams', exam.taken_exam?.id, 'create']);
   }
 
   formatDate(dateString: string): string {
