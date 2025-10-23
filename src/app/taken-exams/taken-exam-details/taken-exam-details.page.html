@@ -1,4 +1,8 @@
 @let takenExamSig = takenExam();
+@let loadingSig = loading();
+@let errorSig = error();
+@let actionSig = action();
+@let isContinueModeSig = isContinueMode();
 
 <ion-header [translucent]="true">
   <ion-toolbar>
@@ -21,7 +25,7 @@
 
   <div class="ion-padding">
     <!-- Loading State -->
-    @if (loading()) {
+    @if (loadingSig) {
     <div
       class="ion-text-center"
       style="
@@ -39,16 +43,16 @@
     }
 
     <!-- Error State -->
-    @if (error()) {
+    @if (errorSig) {
     <ion-card color="danger">
       <ion-card-content>
-        <ion-text color="danger">{{ error() }}</ion-text>
+        <ion-text color="danger">{{ errorSig }}</ion-text>
       </ion-card-content>
     </ion-card>
     }
 
-    <!-- Exam Details -->
-    @if (!loading() && takenExamSig) {
+    <!-- Available View (Graded) -->
+    @if (!loadingSig && actionSig === 'available' && takenExamSig) {
     <div>
       <!-- Header Card -->
       <ion-card>
@@ -195,17 +199,7 @@
         ></app-matching-answer-item>
         }
 
-        <!-- Fallback to generic component -->
-        @if (!answer.item.type || (answer.item.type !== 'mcq' &&
-        answer.item.type !== 'truefalse' && answer.item.type !== 'shortanswer'
-        && answer.item.type !== 'essay' && answer.item.type !== 'fillblank' &&
-        answer.item.type !== 'matching')) {
-        <!-- <app-answer-item
-          [answer]="answer"
-          [index]="i"
-          [maxPoints]="answer.item.points"
-        ></app-answer-item> -->
-        } }
+      }
       </div>
       }
 
@@ -219,7 +213,7 @@
           padding-bottom: 32px;
         "
       >
-        @if (isContinueMode()) {
+        @if (isContinueModeSig) {
         <ion-button
           expand="block"
           fill="solid"
@@ -244,280 +238,11 @@
     }
 
     <!-- Pending Grading View (Exam details not yet available) -->
-    @if (!loading() && !takenExam()) {
-    <div class="ion-margin-top">
-      <!-- Header Card -->
-      <ion-card>
-        <ion-card-header>
-          <ion-card-title>Exam Submitted Successfully!</ion-card-title>
-        </ion-card-header>
-
-        <ion-card-content>
-          <div class="ion-text-center">
-            <ion-icon
-              name="checkmark-circle-outline"
-              style="
-                font-size: 64px;
-                color: var(--ion-color-success);
-                margin-bottom: 16px;
-              "
-            ></ion-icon>
-
-            <h2
-              style="font-size: 1.5rem; font-weight: bold; margin-bottom: 12px"
-            >
-              Pending Grading
-            </h2>
-            <p style="margin-bottom: 24px">
-              Your exam has been successfully submitted on
-              <strong
-                >{{ takenExam()?.submitted_at | date: 'MMM dd, y h:mm a'
-                }}</strong
-              >
-            </p>
-
-            <div
-              style="
-                background-color: var(--ion-color-warning-tint);
-                border-radius: 8px;
-                padding: 16px;
-                margin-bottom: 24px;
-                text-align: left;
-              "
-            >
-              <div style="display: flex; gap: 12px; align-items: flex-start">
-                <ion-icon
-                  name="time-outline"
-                  style="
-                    font-size: 28px;
-                    color: var(--ion-color-warning);
-                    flex-shrink: 0;
-                  "
-                ></ion-icon>
-                <div style="flex: 1">
-                  <h3
-                    style="
-                      font-size: 1.125rem;
-                      font-weight: bold;
-                      margin-bottom: 8px;
-                    "
-                  >
-                    Results Pending Grading
-                  </h3>
-                  <p style="margin-bottom: 12px">
-                    Your exam is currently being reviewed by your teacher.
-                    Results and detailed feedback will be available once grading
-                    is complete and the exam is closed.
-                  </p>
-                  <div
-                    style="
-                      background-color: var(--ion-color-warning-lighter);
-                      border-radius: 6px;
-                      padding: 12px;
-                      margin-top: 12px;
-                    "
-                  >
-                    <p
-                      style="
-                        font-weight: bold;
-                        margin-bottom: 8px;
-                        font-size: 0.875rem;
-                      "
-                    >
-                      What happens next:
-                    </p>
-                    <ul style="list-style: none; padding: 0; margin: 0">
-                      <li
-                        style="
-                          display: flex;
-                          gap: 8px;
-                          margin-bottom: 6px;
-                          font-size: 0.875rem;
-                        "
-                      >
-                        <ion-icon
-                          name="arrow-forward-outline"
-                          style="
-                            color: var(--ion-color-warning);
-                            flex-shrink: 0;
-                          "
-                        ></ion-icon>
-                        <span>Your teacher will review your responses</span>
-                      </li>
-                      <li
-                        style="
-                          display: flex;
-                          gap: 8px;
-                          margin-bottom: 6px;
-                          font-size: 0.875rem;
-                        "
-                      >
-                        <ion-icon
-                          name="arrow-forward-outline"
-                          style="
-                            color: var(--ion-color-warning);
-                            flex-shrink: 0;
-                          "
-                        ></ion-icon>
-                        <span
-                          >Manual grading items will receive scores and
-                          feedback</span
-                        >
-                      </li>
-                      <li
-                        style="
-                          display: flex;
-                          gap: 8px;
-                          margin-bottom: 6px;
-                          font-size: 0.875rem;
-                        "
-                      >
-                        <ion-icon
-                          name="arrow-forward-outline"
-                          style="
-                            color: var(--ion-color-warning);
-                            flex-shrink: 0;
-                          "
-                        ></ion-icon>
-                        <span>Once complete, teacher will close the exam</span>
-                      </li>
-                      <li style="display: flex; gap: 8px; font-size: 0.875rem">
-                        <ion-icon
-                          name="checkmark-done-outline"
-                          style="
-                            color: var(--ion-color-success);
-                            flex-shrink: 0;
-                          "
-                        ></ion-icon>
-                        <span
-                          >You'll be able to view your results and feedback
-                          after closure</span
-                        >
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Submission Details -->
-            <ion-grid>
-              <ion-row>
-                <ion-col size="6">
-                  <ion-card>
-                    <ion-card-content class="ion-padding">
-                      <p
-                        class="ion-text-uppercase"
-                        style="
-                          font-size: 0.75rem;
-                          color: var(--ion-color-medium);
-                          margin-bottom: 8px;
-                        "
-                      >
-                        Submitted On
-                      </p>
-                      <p
-                        style="
-                          font-size: 1.125rem;
-                          font-weight: bold;
-                          margin-bottom: 4px;
-                        "
-                      >
-                        {{ takenExam()?.submitted_at | date: 'MMM dd, y' }}
-                      </p>
-                      <p style="font-size: 0.875rem">
-                        {{ takenExam()?.submitted_at | date: 'h:mm a' }}
-                      </p>
-                    </ion-card-content>
-                  </ion-card>
-                </ion-col>
-                <ion-col size="6">
-                  <ion-card color="warning">
-                    <ion-card-content class="ion-padding">
-                      <p
-                        class="ion-text-uppercase"
-                        style="font-size: 0.75rem; margin-bottom: 8px"
-                      >
-                        Grading Status
-                      </p>
-                      <p
-                        style="
-                          font-size: 1.125rem;
-                          font-weight: bold;
-                          display: flex;
-                          align-items: center;
-                          justify-content: center;
-                          gap: 6px;
-                        "
-                      >
-                        <ion-icon name="time-outline"></ion-icon>
-                        Pending
-                      </p>
-                      <p style="font-size: 0.875rem; margin-top: 4px">
-                        Awaiting review
-                      </p>
-                    </ion-card-content>
-                  </ion-card>
-                </ion-col>
-              </ion-row>
-            </ion-grid>
-
-            <!-- Action Buttons -->
-            <div
-              style="
-                display: flex;
-                flex-direction: column;
-                gap: 12px;
-                margin-top: 24px;
-              "
-            >
-              <ion-button
-                expand="block"
-                fill="solid"
-                color="primary"
-                [routerLink]="['/tabs/exams']"
-              >
-                <ion-icon name="document-outline" slot="start"></ion-icon>
-                Browse More Exams
-              </ion-button>
-
-              <ion-button
-                expand="block"
-                fill="outline"
-                color="primary"
-                [routerLink]="['/tabs/taken-exams']"
-              >
-                <ion-icon name="checkmark-done-outline" slot="start"></ion-icon>
-                View Exam History
-              </ion-button>
-            </div>
-
-            <!-- Help Text -->
-            <div
-              style="
-                margin-top: 24px;
-                padding-top: 24px;
-                border-top: 1px solid var(--ion-color-step-200);
-              "
-            >
-              <p
-                style="
-                  font-size: 0.875rem;
-                  color: var(--ion-color-medium);
-                  display: flex;
-                  align-items: center;
-                  justify-content: center;
-                  gap: 6px;
-                "
-              >
-                <ion-icon name="help-circle-outline"></ion-icon>
-                Check back later to view your results
-              </p>
-            </div>
-          </div>
-        </ion-card-content>
-      </ion-card>
-    </div>
+    @if (!loadingSig && (actionSig === 'pending' || actionSig === 'unavailable' || actionSig === 'unknown')) {
+    <app-pending-exam
+      [takenExam]="takenExamSig!"
+      [action]="actionSig"
+    ></app-pending-exam>
     }
   </div>
 </ion-content>

@@ -47,6 +47,7 @@ import { ShortAnswerItemComponent } from './short-answer-item/short-answer-item.
 import { EssayAnswerItemComponent } from './essay-answer-item/essay-answer-item.component';
 import { FillBlankAnswerItemComponent } from './fill-blank-answer-item/fill-blank-answer-item.component';
 import { MatchingAnswerItemComponent } from './matching-answer-item/matching-answer-item.component';
+import { PendingExamComponent } from './pending-exam/pending-exam.component';
 
 @Component({
   selector: 'app-taken-exam-details',
@@ -82,7 +83,7 @@ import { MatchingAnswerItemComponent } from './matching-answer-item/matching-ans
     MatchingAnswerItemComponent,
     CommonModule,
     FormsModule,
-    RouterLink,
+    PendingExamComponent,
   ],
 })
 export class TakenExamDetailsPage {
@@ -94,6 +95,9 @@ export class TakenExamDetailsPage {
   loading = signal(false);
   error = signal<string | null>(null);
   isContinueMode = signal(false);
+  action = signal<'unavailable' | 'pending' | 'available' | 'unknown'>(
+    'unknown'
+  );
 
   constructor() {
     addIcons({
@@ -134,11 +138,10 @@ export class TakenExamDetailsPage {
     this.error.set(null);
 
     this.http
-      .get<{ data: ITakenExamDetails }>(
-        `${environment.apiBaseUrl}/student/taken-exams/${id}`
-      )
+      .get<{ data: any }>(`${environment.apiBaseUrl}/student/taken-exams/${id}`)
       .pipe(
         map((res) => {
+          console.log(res);
           return res.data;
         }),
         finalize(() => {
@@ -147,7 +150,15 @@ export class TakenExamDetailsPage {
       )
       .subscribe({
         next: (data) => {
-          this.takenExam.set(data || null);
+          // Set the action from API response
+          this.action.set(data.action || 'unknown');
+
+          // Set taken exam only if action is 'available' (graded)
+          this.takenExam.set(data.taken_exam);
+          // if (data.action === 'available' && data.taken_exam) {
+          // } else {
+          //   this.takenExam.set(null);
+          // }
         },
         error: (error) => {
           console.error('Error fetching exam detail:', error);
