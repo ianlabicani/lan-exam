@@ -1,4 +1,4 @@
-import { Component, input, Input } from '@angular/core';
+import { Component, input, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   IonCard,
@@ -28,45 +28,43 @@ import { Answer, Pair } from '../taken-exam-details.page';
   ],
 })
 export class MatchingAnswerItemComponent {
-  answer = input.required<Answer>();
-  index = input.required<number>();
+  readonly answerSig = input.required<Answer>();
+  readonly indexSig = input.required<number>();
 
   constructor() {
     addIcons({ checkmarkCircleOutline, closeCircleOutline });
   }
 
-  parseMatchingAnswer(): Pair[] {
-    const answer = this.answer();
-
+  readonly userMatchesSig = computed(() => {
+    const answer = this.answerSig();
     try {
-      return JSON.parse(answer.answer) || [];
+      // Parse the answer which contains indices like "[0,1]"
+      const indices = JSON.parse(answer.answer) as number[];
+      const pairs = answer.item?.pairs || [];
+      // Map indices to actual pairs
+      return indices.map((idx) => pairs[idx]).filter((p) => p);
     } catch {
       return [];
     }
-  }
+  });
 
-  getCorrectMatches(): number {
-    const userMatches = this.parseMatchingAnswer();
-    const parsedPairs = JSON.parse(
-      JSON.stringify(this.answer().item?.pairs || [])
-    );
+  readonly correctMatchCountSig = computed(() => {
+    const userMatches = this.userMatchesSig();
+    const expectedPairs = this.answerSig().item?.pairs || [];
 
-    return (
-      userMatches.filter((m) =>
-        parsedPairs.some((p: any) => p.left === m.left && p.right === m.right)
-      ).length || 0
-    );
-  }
+    return userMatches.filter((userMatch) =>
+      expectedPairs.some(
+        (expectedPair) =>
+          expectedPair.left === userMatch.left &&
+          expectedPair.right === userMatch.right
+      )
+    ).length;
+  });
 
   isMatchCorrect(match: Pair): boolean {
-    const parsedPairs = JSON.parse(
-      JSON.stringify(this.answer().item?.pairs || [])
-    );
-
-    return (
-      parsedPairs?.some(
-        (p: any) => p.left === match.left && p.right === match.right
-      ) || false
+    const expectedPairs = this.answerSig().item?.pairs || [];
+    return expectedPairs.some(
+      (p) => p.left === match.left && p.right === match.right
     );
   }
 }
